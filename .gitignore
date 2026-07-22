@@ -1,0 +1,9 @@
+.deps/
+.DS_Store
+.build-venv/
+build/
+dist/
+*.egg-info/
+__pycache__/
+tests/__pycache__/
+.pytest_cache/
