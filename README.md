@@ -51,7 +51,7 @@ cat > "$APP_PATH/Contents/Info.plist" <<'PLIST'
   <key>CFBundlePackageType</key>
   <string>APPL</string>
   <key>CFBundleShortVersionString</key>
-  <string>1.0.8</string>
+  <string>1.0.9</string>
 </dict>
 </plist>
 PLIST
@@ -75,8 +75,8 @@ place.
 
 ## Controls
 
-- Click a cell to toggle it alive or dead.
-- Drag on the trackpad (or right-click/middle-drag) to pan the infinite grid.
+- Click or left-drag across cells to toggle them alive or dead; a cell toggles only once per stroke.
+- Right-click or middle-drag to pan the infinite grid.
 - Scroll to zoom in and out.
 - Arrow keys pan the grid four cells at a time.
 - `Space`: run or pause.

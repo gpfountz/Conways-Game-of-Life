@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "conways-game-of-life"
-version = "1.0.8"
+version = "1.0.9"
 description = "A native-feeling macOS implementation of Conway's Game of Life"
 readme = "README.md"
 requires-python = ">=3.10"
