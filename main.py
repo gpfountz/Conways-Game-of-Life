@@ -18,7 +18,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from life import Cell, LifeUniverse
+from life import Cell, LifeUniverse, cells_on_line
 from patterns import PATTERNS
 
 CELL_SIZE = 18.0
@@ -31,7 +31,7 @@ GRID_COLOR = QColor(90, 90, 90, 115)
 APP_NAME = "Conway's Game of Life"
 AUTHOR = "Greg Pfountz"
 BUILD_DATE = "July 22, 2026"
-VERSION = "1.0.8"
+VERSION = "1.0.9"
 ICON_FILE_NAME = "conways-life-icon.png"
 INSTALLED_ASSET_DIRECTORY = Path("share/conways-game-of-life")
 
@@ -69,9 +69,10 @@ class LifeCanvas(QWidget):
         self.cell_size: float = CELL_SIZE
         self.origin: QPointF = QPointF()
         self._last_drag_position: QPointF | None = None
-        self._press_position: QPointF | None = None
+        self._last_toggled_cell: Cell | None = None
         self._drag_button: Qt.MouseButton | None = None
         self._dragging: bool = False
+        self._toggled_cells: set[Cell] = set()
         self.setMouseTracking(True)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
@@ -154,8 +155,9 @@ class LifeCanvas(QWidget):
     def mousePressEvent(self, event: QMouseEvent) -> None:
         if event.button() == Qt.MouseButton.LeftButton:
             self._drag_button = event.button()
-            self._press_position = event.position()
-            self._last_drag_position = event.position()
+            self._last_toggled_cell = self.cell_at(event.position())
+            self._toggled_cells.clear()
+            self._toggle_cell(self._last_toggled_cell)
         elif event.button() in (Qt.MouseButton.MiddleButton, Qt.MouseButton.RightButton):
             self._drag_button = event.button()
             self._dragging = True
@@ -163,13 +165,14 @@ class LifeCanvas(QWidget):
             self.setCursor(Qt.CursorShape.ClosedHandCursor)
 
     def mouseMoveEvent(self, event: QMouseEvent) -> None:
+        if self._drag_button == Qt.MouseButton.LeftButton and self._last_toggled_cell is not None:
+            current_cell = self.cell_at(event.position())
+            for cell in cells_on_line(self._last_toggled_cell, current_cell):
+                self._toggle_cell(cell)
+            self._last_toggled_cell = current_cell
+            return
+
         if self._last_drag_position is not None and self._drag_button is not None:
-            if not self._dragging and self._press_position is not None:
-                horizontal_distance = abs(event.position().x() - self._press_position.x())
-                vertical_distance = abs(event.position().y() - self._press_position.y())
-                if horizontal_distance + vertical_distance >= 4.0:
-                    self._dragging = True
-                    self.setCursor(Qt.CursorShape.ClosedHandCursor)
             if not self._dragging:
                 return
             offset = event.position() - self._last_drag_position
@@ -179,15 +182,21 @@ class LifeCanvas(QWidget):
 
     def mouseReleaseEvent(self, event: QMouseEvent) -> None:
         if event.button() == self._drag_button:
-            if event.button() == Qt.MouseButton.LeftButton and not self._dragging and self._press_position is not None:
-                self.universe.toggle(self.cell_at(self._press_position))
-                self.changed.emit()
-                self.update()
             self._dragging = False
             self._last_drag_position = None
-            self._press_position = None
+            self._last_toggled_cell = None
+            self._toggled_cells.clear()
             self._drag_button = None
             self.unsetCursor()
+
+    def _toggle_cell(self, cell: Cell) -> None:
+        """Toggle a cell at most once during the current left-button stroke."""
+        if cell in self._toggled_cells:
+            return
+        self.universe.toggle(cell)
+        self._toggled_cells.add(cell)
+        self.changed.emit()
+        self.update()
 
     def wheelEvent(self, event: QWheelEvent) -> None:
         multiplier = 1.18 if event.angleDelta().y() > 0 else 1 / 1.18

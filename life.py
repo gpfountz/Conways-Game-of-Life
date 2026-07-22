@@ -8,6 +8,30 @@ from collections.abc import Iterable
 Cell = tuple[int, int]
 
 
+def cells_on_line(start: Cell, end: Cell) -> tuple[Cell, ...]:
+    """Return each grid cell crossed by a straight, integer-cell stroke."""
+    column, row = start
+    end_column, end_row = end
+    cells: list[Cell] = []
+    column_delta = abs(end_column - column)
+    row_delta = -abs(end_row - row)
+    column_step = 1 if column < end_column else -1
+    row_step = 1 if row < end_row else -1
+    error = column_delta + row_delta
+
+    while True:
+        cells.append((column, row))
+        if (column, row) == end:
+            return tuple(cells)
+        doubled_error = 2 * error
+        if doubled_error >= row_delta:
+            error += row_delta
+            column += column_step
+        if doubled_error <= column_delta:
+            error += column_delta
+            row += row_step
+
+
 class LifeUniverse:
     """An unbounded, sparse Conway's Game of Life universe."""
 
