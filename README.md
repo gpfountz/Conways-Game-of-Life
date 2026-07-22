@@ -1,3 +1,5 @@
+![Conway's Game of Life](assets/conways-life-icon.png)
+
 # Conway's Game of Life
 
 A native-feeling macOS desktop implementation of Conway's Game of Life, built with PySide6.
