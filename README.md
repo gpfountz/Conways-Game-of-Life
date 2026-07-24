@@ -51,7 +51,7 @@ cat > "$APP_PATH/Contents/Info.plist" <<'PLIST'
   <key>CFBundlePackageType</key>
   <string>APPL</string>
   <key>CFBundleShortVersionString</key>
-  <string>1.0.9</string>
+  <string>1.0.10</string>
 </dict>
 </plist>
 PLIST
@@ -80,9 +80,9 @@ place.
 - Scroll to zoom in and out.
 - Arrow keys pan the grid four cells at a time.
 - `Space`: run or pause.
-- **Game > Step Forward**: advance one generation.
+- `Command-S`: advance one generation.
 - `Command-N`: new randomized universe.
-- **Game > Clear**: clear the grid.
+- `Command-C`: clear the grid.
 - `Command-+` / `Command--`: zoom in / out.
 - `Command-0`: center the pattern.
 

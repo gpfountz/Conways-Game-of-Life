@@ -31,7 +31,7 @@ GRID_COLOR = QColor(90, 90, 90, 115)
 APP_NAME = "Conway's Game of Life"
 AUTHOR = "Greg Pfountz"
 BUILD_DATE = "July 22, 2026"
-VERSION = "1.0.9"
+VERSION = "1.0.10"
 ICON_FILE_NAME = "conways-life-icon.png"
 INSTALLED_ASSET_DIRECTORY = Path("share/conways-game-of-life")
 
@@ -240,8 +240,8 @@ class MainWindow(QMainWindow):
 
     def _create_actions(self) -> None:
         self.new_action = self.action("New", QKeySequence.StandardKey.New, self.new_universe)
-        self.clear_action = self.action("Clear", None, self.clear)
-        self.step_action = self.action("Step Forward", None, self.step)
+        self.clear_action = self.action("Clear", "Meta+C", self.clear)
+        self.step_action = self.action("Step Forward", "Meta+S", self.step)
         self.run_action = self.action("Run", Qt.Key.Key_Space, self.toggle_running)
         self.run_action.setCheckable(True)
         self.pan_left_action = self.action(
