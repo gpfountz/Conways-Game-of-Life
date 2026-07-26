@@ -68,7 +68,7 @@ cat > "$APP_PATH/Contents/Info.plist" <<'PLIST'
   <key>CFBundlePackageType</key>
   <string>APPL</string>
   <key>CFBundleShortVersionString</key>
-  <string>1.0.10</string>
+  <string>1.0.11</string>
 </dict>
 </plist>
 PLIST
@@ -102,6 +102,7 @@ place.
 - `Command-C`: clear the grid.
 - `Command-+` / `Command--`: zoom in / out.
 - `Command-0`: center the pattern.
+- Births flip and fade into view; deaths flip and fade away over the current generation interval.
 
 Use **Patterns** for classic built-in configurations including still lifes, oscillators, a glider, and Gosper's glider gun.
 
