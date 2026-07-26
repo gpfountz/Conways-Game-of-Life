@@ -1,4 +1,6 @@
 .deps/
+.typecheck-deps/
+.venv/
 .DS_Store
 .build-venv/
 build/
@@ -7,3 +9,5 @@ dist/
 __pycache__/
 tests/__pycache__/
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
