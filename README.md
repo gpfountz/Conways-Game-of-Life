@@ -4,6 +4,23 @@
 
 A native-feeling macOS desktop implementation of Conway's Game of Life, built with PySide6.
 
+## Development Run
+
+Requires Python 3.10 or later. From the project checkout, create a local
+virtual environment, install the dependencies, and launch the app:
+
+```zsh
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python main.py
+```
+
+After the initial setup, launch it again with:
+
+```zsh
+.venv/bin/python main.py
+```
+
 ## Deployment
 
 These instructions build a wheel, install it into an isolated virtual

@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+from typing import Final, TypeAlias
+
 from life import Cell
 
-Pattern = tuple[Cell, ...]
+Pattern: TypeAlias = tuple[Cell, ...]
 
-PATTERNS: dict[str, Pattern] = {
+PATTERNS: Final[dict[str, Pattern]] = {
     "Block (still life)": ((0, 0), (1, 0), (0, 1), (1, 1)),
     "Blinker (period 2)": ((-1, 0), (0, 0), (1, 0)),
     "Toad (period 2)": ((0, 0), (1, 0), (2, 0), (-1, 1), (0, 1), (1, 1)),
