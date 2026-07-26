@@ -240,8 +240,8 @@ class MainWindow(QMainWindow):
 
     def _create_actions(self) -> None:
         self.new_action = self.action("New", QKeySequence.StandardKey.New, self.new_universe)
-        self.clear_action = self.action("Clear", "Meta+C", self.clear)
-        self.step_action = self.action("Step Forward", "Meta+S", self.step)
+        self.clear_action = self.action("Clear", "Ctrl+C", self.clear)
+        self.step_action = self.action("Step Forward", "Ctrl+S", self.step)
         self.run_action = self.action("Run", Qt.Key.Key_Space, self.toggle_running)
         self.run_action.setCheckable(True)
         self.pan_left_action = self.action(
