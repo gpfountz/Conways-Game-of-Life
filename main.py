@@ -4,12 +4,11 @@ from __future__ import annotations
 
 import random
 import sys
-from collections.abc import Callable
+from collections.abc import Callable, MutableMapping
 from pathlib import Path
-from collections.abc import MutableMapping
 from typing import Final, Protocol, cast
 
-from PySide6.QtCore import QEvent, QPointF, QRectF, Qt, QTimer, Signal
+from PySide6.QtCore import QElapsedTimer, QEvent, QPointF, QRectF, Qt, QTimer, Signal
 from PySide6.QtGui import QAction, QColor, QIcon, QKeySequence, QMouseEvent, QPainter, QPaintEvent, QPen, QWheelEvent
 from PySide6.QtWidgets import (
     QApplication,
@@ -29,12 +28,13 @@ MIN_CELL_SIZE: Final[float] = 4.0
 MAX_CELL_SIZE: Final[float] = 64.0
 DEFAULT_INTERVAL_MS: Final[int] = 180
 PAN_INCREMENT_CELLS: Final[int] = 4
+ANIMATION_FRAME_INTERVAL_MS: Final[int] = 16
 BACKGROUND_COLOR: Final[QColor] = QColor("#000000")
 GRID_COLOR: Final[QColor] = QColor(90, 90, 90, 115)
 APP_NAME: Final[str] = "Conway's Game of Life"
 AUTHOR: Final[str] = "Greg Pfountz"
-BUILD_DATE: Final[str] = "July 22, 2026"
-VERSION: Final[str] = "1.0.10"
+BUILD_DATE: Final[str] = "July 26, 2026"
+VERSION: Final[str] = "1.0.11"
 ICON_FILE_NAME: Final[str] = "conways-life-icon.png"
 INSTALLED_ASSET_DIRECTORY: Final[Path] = Path("share/conways-game-of-life")
 
@@ -89,6 +89,13 @@ class LifeCanvas(QWidget):
         self._drag_button: Qt.MouseButton | None = None
         self._dragging: bool = False
         self._toggled_cells: set[Cell] = set()
+        self._birth_cells: set[Cell] = set()
+        self._death_cells: set[Cell] = set()
+        self._transition_duration_ms: int = DEFAULT_INTERVAL_MS
+        self._transition_clock: QElapsedTimer = QElapsedTimer()
+        self._animation_timer: QTimer = QTimer(self)
+        self._animation_timer.setInterval(ANIMATION_FRAME_INTERVAL_MS)
+        self._animation_timer.timeout.connect(self._advance_transition)
         self.setMouseTracking(True)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
@@ -146,6 +153,72 @@ class LifeCanvas(QWidget):
         self.origin -= QPointF(column_offset * self.cell_size, row_offset * self.cell_size)
         self.update()
 
+    def animate_generation_transition(
+        self,
+        born_cells: set[Cell],
+        died_cells: set[Cell],
+        duration_ms: int,
+    ) -> None:
+        """Animate births into view and deaths away over one generation interval."""
+        self._birth_cells = set(born_cells)
+        self._death_cells = set(died_cells)
+        self._transition_duration_ms = max(1, duration_ms)
+        if not self._birth_cells and not self._death_cells:
+            self.clear_transitions()
+            return
+        self._transition_clock.start()
+        self._animation_timer.start()
+        self.update()
+
+    def clear_transitions(self) -> None:
+        """Stop any pending birth or death animations and redraw stable cells."""
+        self._animation_timer.stop()
+        self._transition_clock.invalidate()
+        self._birth_cells.clear()
+        self._death_cells.clear()
+        self.update()
+
+    def _transition_progress(self) -> float:
+        """Return the normalized progress of the active generation transition."""
+        if not self._transition_clock.isValid():
+            return 1.0
+        elapsed_ms: int = self._transition_clock.elapsed()
+        return min(1.0, elapsed_ms / self._transition_duration_ms)
+
+    def _advance_transition(self) -> None:
+        """Request animation frames until the birth and death transition completes."""
+        if self._transition_progress() >= 1.0:
+            self._animation_timer.stop()
+            self._transition_clock.invalidate()
+            self._birth_cells.clear()
+            self._death_cells.clear()
+        self.update()
+
+    def _draw_cell(
+        self,
+        painter: QPainter,
+        cell: Cell,
+        color: QColor,
+        facing_scale: float = 1.0,
+        opacity: float = 1.0,
+    ) -> None:
+        """Draw a cell with optional horizontal flip scale and opacity."""
+        if facing_scale <= 0.0 or opacity <= 0.0:
+            return
+        base_rectangle: QRectF = self.cell_rect(cell).adjusted(1.0, 1.0, -1.0, -1.0)
+        visible_width: float = base_rectangle.width() * min(1.0, facing_scale)
+        visible_left: float = base_rectangle.center().x() - visible_width / 2
+        visible_rectangle: QRectF = QRectF(
+            visible_left,
+            base_rectangle.top(),
+            visible_width,
+            base_rectangle.height(),
+        )
+        cell_color: QColor = QColor(color)
+        cell_color.setAlphaF(min(1.0, opacity))
+        painter.setBrush(cell_color)
+        painter.drawRect(visible_rectangle)
+
     def paintEvent(self, event: QPaintEvent) -> None:
         """Paint the visible grid and every visible live cell."""
         del event
@@ -167,12 +240,16 @@ class LifeCanvas(QWidget):
                 painter.drawLine(QPointF(0, y), QPointF(self.width(), y))
 
         live_color: QColor = self.palette().highlight().color()
-        painter.setBrush(live_color)
         painter.setPen(Qt.PenStyle.NoPen)
-        for cell in self.universe.live_cells:
-            rectangle: QRectF = self.cell_rect(cell).adjusted(1.0, 1.0, -1.0, -1.0)
-            if rectangle.intersects(QRectF(self.rect())):
-                painter.drawRect(rectangle)
+        transition_progress: float = self._transition_progress()
+        stable_cells: set[Cell] = self.universe.live_cells - self._birth_cells
+        for cell in stable_cells:
+            self._draw_cell(painter, cell, live_color)
+        for cell in self._birth_cells:
+            self._draw_cell(painter, cell, live_color, transition_progress, transition_progress)
+        death_scale: float = 1.0 - transition_progress
+        for cell in self._death_cells:
+            self._draw_cell(painter, cell, live_color, death_scale, death_scale)
 
     def mousePressEvent(self, event: QMouseEvent) -> None:
         """Start a cell-edit stroke or a mouse-button pan gesture."""
@@ -218,6 +295,7 @@ class LifeCanvas(QWidget):
         """Toggle a cell at most once during the current left-button stroke."""
         if cell in self._toggled_cells:
             return
+        self.clear_transitions()
         self.universe.toggle(cell)
         self._toggled_cells.add(cell)
         self.changed.emit()
@@ -340,6 +418,7 @@ class MainWindow(QMainWindow):
     def new_universe(self) -> None:
         """Replace the universe with a fresh randomized starting pattern."""
         self.pause()
+        self.canvas.clear_transitions()
         cells: set[Cell] = {
             (column, row)
             for column in range(-22, 23)
@@ -353,6 +432,7 @@ class MainWindow(QMainWindow):
     def clear(self) -> None:
         """Clear the universe and stop simulation playback."""
         self.pause()
+        self.canvas.clear_transitions()
         self.universe.clear()
         self.canvas.update()
         self.update_status()
@@ -360,14 +440,18 @@ class MainWindow(QMainWindow):
     def load_pattern(self, cells: tuple[Cell, ...]) -> None:
         """Load a built-in pattern and center it in the viewport."""
         self.pause()
+        self.canvas.clear_transitions()
         self.universe.set_cells(cells)
         self.canvas.center_on_cells()
         self.update_status()
 
     def step(self) -> None:
         """Advance the universe by one simultaneous generation."""
+        previous_live_cells: set[Cell] = set(self.universe.live_cells)
         self.universe.advance()
-        self.canvas.update()
+        born_cells: set[Cell] = self.universe.live_cells - previous_live_cells
+        died_cells: set[Cell] = previous_live_cells - self.universe.live_cells
+        self.canvas.animate_generation_transition(born_cells, died_cells, self.timer.interval())
         self.update_status()
 
     def toggle_running(self) -> None:
