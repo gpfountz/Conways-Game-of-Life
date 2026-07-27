@@ -358,9 +358,9 @@ class MainWindow(QMainWindow):
 
     def _create_actions(self) -> None:
         """Create every command used by menus and keyboard shortcuts."""
-        self.new_action = self.action("New", QKeySequence.StandardKey.New, self.new_universe)
-        self.clear_action = self.action("Clear", "Ctrl+C", self.clear)
-        self.step_action = self.action("Step Forward", "Ctrl+S", self.step)
+        self.new_action = self.action("New", "N", self.new_universe)
+        self.clear_action = self.action("Clear", "C", self.clear)
+        self.step_action = self.action("Step Forward", "S", self.step)
         self.run_action = self.action("Run", Qt.Key.Key_Space, self.toggle_running)
         self.run_action.setCheckable(True)
         self.pan_left_action = self.action(
@@ -375,9 +375,9 @@ class MainWindow(QMainWindow):
         self.pan_down_action = self.action(
             "Pan Down", Qt.Key.Key_Down, lambda: self.canvas.pan_by_cells(0, PAN_INCREMENT_CELLS)
         )
-        self.zoom_in_action = self.action("Zoom In", QKeySequence.StandardKey.ZoomIn, lambda: self.canvas.zoom(1.18))
-        self.zoom_out_action = self.action("Zoom Out", QKeySequence.StandardKey.ZoomOut, lambda: self.canvas.zoom(1 / 1.18))
-        self.center_action = self.action("Center Pattern", "Meta+0", self.canvas.center_on_cells)
+        self.zoom_in_action = self.action("Zoom In", "=", lambda: self.canvas.zoom(1.18))
+        self.zoom_out_action = self.action("Zoom Out", "-", lambda: self.canvas.zoom(1 / 1.18))
+        self.center_action = self.action("Center Pattern", "0", self.canvas.center_on_cells)
         self.about_action = self.action("About Conway's Game of Life", None, self.show_about)
 
     def _create_menus(self) -> None:
@@ -388,8 +388,9 @@ class MainWindow(QMainWindow):
         game_menu.addActions((self.run_action, self.step_action))
         game_menu.addSeparator()
         speed_menu: QMenu = game_menu.addMenu("Simulation Speed")
-        for label, interval in (("Slow", 500), ("Normal", DEFAULT_INTERVAL_MS), ("Fast", 65)):
+        for label, interval, key in (("Slow", 500, Qt.Key_1), ("Normal", DEFAULT_INTERVAL_MS, Qt.Key_2), ("Fast", 65, Qt.Key_3)):
             speed_action: QAction = QAction(label, self, checkable=True)
+            speed_action.setShortcut(key)
             speed_action.triggered.connect(lambda checked=False, value=interval: self.set_speed(value))
             speed_menu.addAction(speed_action)
             self.speed_actions.append(speed_action)
