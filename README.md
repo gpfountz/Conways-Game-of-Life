@@ -97,12 +97,12 @@ place.
 - Scroll to zoom in and out.
 - Arrow keys pan the grid four cells at a time.
 - `Space`: run or pause.
-- `Command-S`: advance one generation.
-- `Command-N`: new randomized universe.
-- `Command-C`: clear the grid.
-- `Command-+` / `Command--`: zoom in / out.
-- `Command-0`: center the pattern.
-- Births flip and fade into view; deaths flip and fade away over the current generation interval.
+- `S`: advance one generation.
+- `N`: new randomized universe.
+- `C`: clear the grid.
+- `=` / `-`: zoom in / out.
+- `0`: center the pattern.
+- '1', '2', '3': slow, medium, fast speed
 
 Use **Patterns** for classic built-in configurations including still lifes, oscillators, a glider, and Gosper's glider gun.
 
