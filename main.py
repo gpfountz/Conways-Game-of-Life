@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Final, Protocol, cast
 
 from PySide6.QtCore import QElapsedTimer, QEvent, QPointF, QRectF, QSettings, Qt, QTimer, Signal
-from PySide6.QtGui import QAction, QColor, QIcon, QKeySequence, QMouseEvent, QPainter, QPaintEvent, QPen, QWheelEvent
+from PySide6.QtGui import QAction, QColor, QIcon, QKeySequence, QMouseEvent, QPainter, QPaintEvent, QPen, QResizeEvent, QWheelEvent
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -331,15 +331,16 @@ class MainWindow(QMainWindow):
         self.about_action: QAction
         self.speed_actions: list[QAction] = []
         self.status: QStatusBar
+        self.cell_size: float = min(self.width() / 50, self.height() / 40)
 
         self.setWindowTitle(APP_NAME)
         self.settings = QSettings("com.pfountz", "ConwaysGameOfLife")
         # Restore geometry if it exists
         if self.settings.contains("geometry"):
-            _cell_size = min(self.width() / 50, self.height() / 40)
             self.restoreGeometry(self.settings.value("geometry"))
-            _zoom_amount: float = min(self.width() / 50, self.height() / 40) / _cell_size
+            _zoom_amount: float = min(self.width() / 50, self.height() / 40) / self.cell_size
             self.canvas.zoom(_zoom_amount)  # Ensure cell size is set correctly after window resize
+            self.cell_size = min(self.width() / 50, self.height() / 40)
         else:
             self.resize(int(QApplication.primaryScreen().size().width() * WINDOW_SIZE_SCALE), 
                         int(QApplication.primaryScreen().size().height() * WINDOW_SIZE_SCALE))
@@ -355,6 +356,13 @@ class MainWindow(QMainWindow):
         # Save geometry when the window is closed
         self.settings.setValue("geometry", self.saveGeometry())
         super().closeEvent(event)
+
+    def resizeEvent(self, event: QResizeEvent) -> None:
+        _old_cell_size = self.cell_size
+        self.cell_size = min(self.width() / 50, self.height() / 40)
+        self.canvas.zoom(self.cell_size / _old_cell_size)
+        self.canvas.center_on_cells()
+        super().resizeEvent(event)
 
     def action(
         self,
