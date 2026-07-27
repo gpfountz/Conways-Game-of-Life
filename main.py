@@ -336,7 +336,10 @@ class MainWindow(QMainWindow):
         self.settings = QSettings("com.pfountz", "ConwaysGameOfLife")
         # Restore geometry if it exists
         if self.settings.contains("geometry"):
+            _cell_size = min(self.width() / 50, self.height() / 40)
             self.restoreGeometry(self.settings.value("geometry"))
+            _zoom_amount: float = min(self.width() / 50, self.height() / 40) / _cell_size
+            self.canvas.zoom(_zoom_amount)  # Ensure cell size is set correctly after window resize
         else:
             self.resize(int(QApplication.primaryScreen().size().width() * WINDOW_SIZE_SCALE), 
                         int(QApplication.primaryScreen().size().height() * WINDOW_SIZE_SCALE))
