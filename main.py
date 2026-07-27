@@ -23,7 +23,6 @@ from PySide6.QtWidgets import (
 from life import Cell, LifeUniverse, cells_on_line
 from patterns import PATTERNS
 
-CELL_SIZE: Final[float] = 18.0
 MIN_CELL_SIZE: Final[float] = 4.0
 MAX_CELL_SIZE: Final[float] = 64.0
 DEFAULT_INTERVAL_MS: Final[int] = 180
@@ -37,7 +36,7 @@ BUILD_DATE: Final[str] = "July 26, 2026"
 VERSION: Final[str] = "1.0.11"
 ICON_FILE_NAME: Final[str] = "conways-life-icon.png"
 INSTALLED_ASSET_DIRECTORY: Final[Path] = Path("share/conways-game-of-life")
-
+WINDOW_SIZE_SCALE: Final[float] = 0.8
 
 class MacOSBundle(Protocol):
     """The Cocoa bundle operations needed to customize the app menu name."""
@@ -82,7 +81,7 @@ class LifeCanvas(QWidget):
         """Create a canvas that displays and edits a Life universe."""
         super().__init__(parent)
         self.universe: LifeUniverse = universe
-        self.cell_size: float = CELL_SIZE
+        self.cell_size = self.scaled_cell_size()
         self.origin: QPointF = QPointF()
         self._last_drag_position: QPointF | None = None
         self._last_toggled_cell: Cell | None = None
@@ -98,6 +97,12 @@ class LifeCanvas(QWidget):
         self._animation_timer.timeout.connect(self._advance_transition)
         self.setMouseTracking(True)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+
+    def scaled_cell_size(self) -> float:
+        _screen_size = QApplication.primaryScreen().size()
+        _cell_scaled_width: float = _screen_size.width() * WINDOW_SIZE_SCALE / 50
+        _cell_scaled_height: float = _screen_size.height() * WINDOW_SIZE_SCALE / 40
+        return min(_cell_scaled_width, _cell_scaled_height)
 
     def showEvent(self, event: QEvent) -> None:
         """Center the empty universe when the canvas first becomes visible."""
@@ -334,7 +339,8 @@ class MainWindow(QMainWindow):
         self.status: QStatusBar
 
         self.setWindowTitle(APP_NAME)
-        self.resize(960, 700)
+        self.resize(int(QApplication.primaryScreen().size().width() * WINDOW_SIZE_SCALE), 
+                    int(QApplication.primaryScreen().size().height() * WINDOW_SIZE_SCALE))
         self.setCentralWidget(self.canvas)
         self.canvas.changed.connect(self.update_status)
         self._create_actions()
