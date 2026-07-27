@@ -81,7 +81,7 @@ class LifeCanvas(QWidget):
         """Create a canvas that displays and edits a Life universe."""
         super().__init__(parent)
         self.universe: LifeUniverse = universe
-        self.cell_size = self.scaled_cell_size()
+        self.cell_size = min(self.width() / 50, self.height() / 40)
         self.origin: QPointF = QPointF()
         self._last_drag_position: QPointF | None = None
         self._last_toggled_cell: Cell | None = None
@@ -97,12 +97,6 @@ class LifeCanvas(QWidget):
         self._animation_timer.timeout.connect(self._advance_transition)
         self.setMouseTracking(True)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-
-    def scaled_cell_size(self) -> float:
-        _screen_size = QApplication.primaryScreen().size()
-        _cell_scaled_width: float = _screen_size.width() * WINDOW_SIZE_SCALE / 50
-        _cell_scaled_height: float = _screen_size.height() * WINDOW_SIZE_SCALE / 40
-        return min(_cell_scaled_width, _cell_scaled_height)
 
     def showEvent(self, event: QEvent) -> None:
         """Center the empty universe when the canvas first becomes visible."""
@@ -339,8 +333,7 @@ class MainWindow(QMainWindow):
         self.status: QStatusBar
 
         self.setWindowTitle(APP_NAME)
-        self.settings = QSettings("MyCompany", "MyApp")
-        
+        self.settings = QSettings("com.pfountz", "ConwaysGameOfLife")
         # Restore geometry if it exists
         if self.settings.contains("geometry"):
             self.restoreGeometry(self.settings.value("geometry"))
