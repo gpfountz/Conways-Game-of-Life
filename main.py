@@ -8,7 +8,7 @@ from collections.abc import Callable, MutableMapping
 from pathlib import Path
 from typing import Final, Protocol, cast
 
-from PySide6.QtCore import QElapsedTimer, QEvent, QPointF, QRectF, Qt, QTimer, Signal
+from PySide6.QtCore import QElapsedTimer, QEvent, QPointF, QRectF, QSettings, Qt, QTimer, Signal
 from PySide6.QtGui import QAction, QColor, QIcon, QKeySequence, QMouseEvent, QPainter, QPaintEvent, QPen, QWheelEvent
 from PySide6.QtWidgets import (
     QApplication,
@@ -339,8 +339,14 @@ class MainWindow(QMainWindow):
         self.status: QStatusBar
 
         self.setWindowTitle(APP_NAME)
-        self.resize(int(QApplication.primaryScreen().size().width() * WINDOW_SIZE_SCALE), 
-                    int(QApplication.primaryScreen().size().height() * WINDOW_SIZE_SCALE))
+        self.settings = QSettings("MyCompany", "MyApp")
+        
+        # Restore geometry if it exists
+        if self.settings.contains("geometry"):
+            self.restoreGeometry(self.settings.value("geometry"))
+        else:
+            self.resize(int(QApplication.primaryScreen().size().width() * WINDOW_SIZE_SCALE), 
+                        int(QApplication.primaryScreen().size().height() * WINDOW_SIZE_SCALE))
         self.setCentralWidget(self.canvas)
         self.canvas.changed.connect(self.update_status)
         self._create_actions()
@@ -348,6 +354,11 @@ class MainWindow(QMainWindow):
         self._create_status_bar()
         self.update_status()
         QTimer.singleShot(0, self.new_universe)
+
+    def closeEvent(self, event):
+        # Save geometry when the window is closed
+        self.settings.setValue("geometry", self.saveGeometry())
+        super().closeEvent(event)
 
     def action(
         self,
