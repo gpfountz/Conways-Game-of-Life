@@ -7,6 +7,7 @@ from collections.abc import Iterable
 from typing import Final, TypeAlias
 
 Cell: TypeAlias = tuple[int, int]
+"""A grid cell in Conway's Game of Life, represented as (column, row)."""
 
 def cells_on_line(start: Cell, end: Cell) -> tuple[Cell, ...]:
     """Return each grid cell crossed by a straight, integer-cell stroke."""
@@ -68,14 +69,18 @@ class LifeUniverse:
 
     def advance(self) -> None:
         """Apply B3/S23 once, simultaneously, to all relevant cells."""
+
+        # For each cell, add one to each neighbor's count
         neighbors: Counter[Cell] = Counter()
-        for column, row in self.live_cells:
+        for column, row in self.live_cells: # pyright: ignore[reportGeneralTypeIssues]
             for delta_column in (-1, 0, 1):
                 for delta_row in (-1, 0, 1):
                     if delta_column != 0 or delta_row != 0:
                         neighbors[(column + delta_column, row + delta_row)] += 1
 
-        self.live_cells = {
+        # set comprehension: consise expression to generate a set collection
+        # generate a set of live_cells with 3 neighbors, or 2 neighbors if already alive
+        self.live_cells = { 
             cell
             for cell, count in neighbors.items()
             if count == 3 or (count == 2 and cell in self.live_cells)

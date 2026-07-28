@@ -37,7 +37,7 @@ class LifeCanvas(QWidget):
 
     def showEvent(self, event: QEvent) -> None:
         """Center the empty universe when the canvas first becomes visible."""
-        super().showEvent(event)
+        super().showEvent(event) # pyright: ignore[reportArgumentType]
         if self.origin.isNull():
             self.origin = QPointF(self.width() / 2, self.height() / 2)
 
