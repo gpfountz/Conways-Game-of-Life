@@ -4,10 +4,9 @@ from __future__ import annotations
 
 from collections import Counter
 from collections.abc import Iterable
-from typing import TypeAlias
+from typing import Final, TypeAlias
 
 Cell: TypeAlias = tuple[int, int]
-
 
 def cells_on_line(start: Cell, end: Cell) -> tuple[Cell, ...]:
     """Return each grid cell crossed by a straight, integer-cell stroke."""
