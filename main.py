@@ -205,7 +205,7 @@ class MainWindow(QMainWindow):
             (column, row)
             for column in range(-22, 23)
             for row in range(-16, 17)
-            if random.random() < 0.28
+            if random.SystemRandom().random() < 0.28
         }
         self.universe.set_cells(cells)
         self.canvas.center_on_cells()
