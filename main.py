@@ -57,7 +57,7 @@ def configure_macos_bundle_name() -> None:
     if sys.platform != "darwin":
         return
 
-    from Foundation import NSBundle
+    from Foundation import NSBundle # pyright: ignore[reportAttributeAccessIssue]
 
     bundle: MacOSBundle = cast(MacOSBundle, NSBundle.mainBundle())
     bundle_info: MutableMapping[str, str] | None = bundle.localizedInfoDictionary() or bundle.infoDictionary()
@@ -169,7 +169,7 @@ class MainWindow(QMainWindow):
         game_menu.addActions((self.run_action, self.step_action))
         game_menu.addSeparator()
         speed_menu: QMenu = game_menu.addMenu("Simulation Speed")
-        for label, interval, key in (("Slow", 500, Qt.Key_1), ("Normal", DEFAULT_INTERVAL_MS, Qt.Key_2), ("Fast", 65, Qt.Key_3)):
+        for label, interval, key in (("Slow", 500, Qt.Key_1), ("Normal", DEFAULT_INTERVAL_MS, Qt.Key_2), ("Fast", 65, Qt.Key_3)): # pyright: ignore[reportAttributeAccessIssue]
             speed_action: QAction = QAction(label, self, checkable=True)
             speed_action.setShortcut(key)
             speed_action.triggered.connect(lambda checked=False, value=interval: self.set_speed(value))
