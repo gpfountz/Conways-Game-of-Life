@@ -25,7 +25,7 @@ from patterns import PATTERNS
 APP_NAME: Final[str] = "Conway's Game of Life"
 AUTHOR: Final[str] = "Greg Pfountz"
 BUILD_DATE: Final[str] = "July 26, 2026"
-VERSION: Final[str] = "1.0.11"
+VERSION: Final[str] = "1.0.12"
 ICON_FILE_NAME: Final[str] = "conways-life-icon.png"
 INSTALLED_ASSET_DIRECTORY: Final[Path] = Path("share/conways-game-of-life")
 WINDOW_SIZE_SCALE: Final[float] = 0.8
@@ -293,7 +293,7 @@ class MainWindow(QMainWindow):
             f"Author: {AUTHOR}\n"
             f"Build date: {BUILD_DATE}\n"
             f"Version: {VERSION}\n\n"
-            "Click cells to toggle life. "
+            "Click cells to toggle life.\n"
             "Arrow keys to pan, "
              "+/- to zoom.\n\n"
             "Rules: a live cell survives with two or three neighbours; "
