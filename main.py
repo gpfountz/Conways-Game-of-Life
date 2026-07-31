@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Final, Protocol, cast
 
 from PySide6.QtCore import QSettings, Qt, QTimer
-from PySide6.QtGui import QAction, QColor, QIcon, QKeySequence, QResizeEvent
+from PySide6.QtGui import QAction, QIcon, QKeySequence, QResizeEvent
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -22,7 +22,6 @@ from LifeCanvas import LifeCanvas
 from life import Cell, LifeUniverse
 from patterns import PATTERNS
 
-PAN_INCREMENT_CELLS: Final[int] = 4
 APP_NAME: Final[str] = "Conway's Game of Life"
 AUTHOR: Final[str] = "Greg Pfountz"
 BUILD_DATE: Final[str] = "July 26, 2026"
@@ -31,6 +30,11 @@ ICON_FILE_NAME: Final[str] = "conways-life-icon.png"
 INSTALLED_ASSET_DIRECTORY: Final[Path] = Path("share/conways-game-of-life")
 WINDOW_SIZE_SCALE: Final[float] = 0.8
 DEFAULT_INTERVAL_MS: Final[int] = 180
+NEW_WINDOW_WIDTH: Final[int] = 50
+NEW_WINDOW_HEIGHT: Final[int] = 40
+NEW_WINDOW_FILL_WIDTH: Final[int] = 44
+NEW_WINDOW_FILL_HEIGHT: Final[int] = 34
+NEW_WINDOW_RANDOM_FILL_PROBABILITY: Final[float] = 0.28
 
 class MacOSBundle(Protocol):
     """The Cocoa bundle operations needed to customize the app menu name."""
@@ -73,7 +77,9 @@ class MainWindow(QMainWindow):
         """Create the main simulation window and its native menu actions."""
         super().__init__()
         self.universe: LifeUniverse = LifeUniverse()
-        self.canvas: LifeCanvas = LifeCanvas(self.universe, transition_duration_ms=DEFAULT_INTERVAL_MS)
+        self.canvas: LifeCanvas = LifeCanvas(self.universe,
+                                             min(self.width() / NEW_WINDOW_WIDTH, 
+                                                 self.height() / NEW_WINDOW_HEIGHT))
         self.timer: QTimer = QTimer(self)
         self.timer.setInterval(DEFAULT_INTERVAL_MS)
         self.timer.timeout.connect(self.step)
@@ -91,16 +97,19 @@ class MainWindow(QMainWindow):
         self.about_action: QAction
         self.speed_actions: list[QAction] = []
         self.status: QStatusBar
-        self.cell_size: float = min(self.width() / 50, self.height() / 40)
+        self.cell_size: float = min(self.width() / NEW_WINDOW_WIDTH,
+                                    self.height() / NEW_WINDOW_HEIGHT)
 
         self.setWindowTitle(APP_NAME)
         self.settings = QSettings("com.pfountz", "ConwaysGameOfLife")
         # Restore geometry if it exists
         if self.settings.contains("geometry"):
             self.restoreGeometry(self.settings.value("geometry"))
-            _zoom_amount: float = min(self.width() / 50, self.height() / 40) / self.cell_size
+            _zoom_amount: float = min(self.width() / NEW_WINDOW_WIDTH, 
+                                      self.height() / NEW_WINDOW_HEIGHT) / self.cell_size
             self.canvas.zoom(_zoom_amount)  # Ensure cell size is set correctly after window resize
-            self.cell_size = min(self.width() / 50, self.height() / 40)
+            self.cell_size = min(self.width() / NEW_WINDOW_WIDTH, 
+                                 self.height() / NEW_WINDOW_HEIGHT)
         else:
             self.resize(int(QApplication.primaryScreen().size().width() * WINDOW_SIZE_SCALE), 
                         int(QApplication.primaryScreen().size().height() * WINDOW_SIZE_SCALE))
@@ -119,7 +128,8 @@ class MainWindow(QMainWindow):
 
     def resizeEvent(self, event: QResizeEvent) -> None:
         _old_cell_size = self.cell_size
-        self.cell_size = min(self.width() / 50, self.height() / 40)
+        self.cell_size = min(self.width() / NEW_WINDOW_WIDTH, 
+                             self.height() / NEW_WINDOW_HEIGHT)
         self.canvas.zoom(self.cell_size / _old_cell_size)
         self.canvas.center_on_cells()
         super().resizeEvent(event)
@@ -145,19 +155,19 @@ class MainWindow(QMainWindow):
         self.run_action = self.action("Run", Qt.Key.Key_Space, self.toggle_running)
         self.run_action.setCheckable(True)
         self.pan_left_action = self.action(
-            "Pan Left", Qt.Key.Key_Left, lambda: self.canvas.pan_by_cells(-PAN_INCREMENT_CELLS, 0)
+            "Pan Left", Qt.Key.Key_Left, lambda: self.canvas.pan_by_cells(-1, 0)
         )
         self.pan_right_action = self.action(
-            "Pan Right", Qt.Key.Key_Right, lambda: self.canvas.pan_by_cells(PAN_INCREMENT_CELLS, 0)
+            "Pan Right", Qt.Key.Key_Right, lambda: self.canvas.pan_by_cells(1, 0)
         )
         self.pan_up_action = self.action(
-            "Pan Up", Qt.Key.Key_Up, lambda: self.canvas.pan_by_cells(0, -PAN_INCREMENT_CELLS)
+            "Pan Up", Qt.Key.Key_Up, lambda: self.canvas.pan_by_cells(0, -1)
         )
         self.pan_down_action = self.action(
-            "Pan Down", Qt.Key.Key_Down, lambda: self.canvas.pan_by_cells(0, PAN_INCREMENT_CELLS)
+            "Pan Down", Qt.Key.Key_Down, lambda: self.canvas.pan_by_cells(0, 1)
         )
-        self.zoom_in_action = self.action("Zoom In", "=", lambda: self.canvas.zoom(1.18))
-        self.zoom_out_action = self.action("Zoom Out", "-", lambda: self.canvas.zoom(1 / 1.18))
+        self.zoom_in_action = self.action("Zoom In", "=", lambda: self.canvas.zoom_in())
+        self.zoom_out_action = self.action("Zoom Out", "-", lambda: self.canvas.zoom_out())
         self.center_action = self.action("Center Pattern", "0", self.canvas.center_on_cells)
         self.about_action = self.action("About Conway's Game of Life", None, self.show_about)
 
@@ -169,10 +179,13 @@ class MainWindow(QMainWindow):
         game_menu.addActions((self.run_action, self.step_action))
         game_menu.addSeparator()
         speed_menu: QMenu = game_menu.addMenu("Simulation Speed")
-        for label, interval, key in (("Slow", 500, Qt.Key_1), ("Normal", DEFAULT_INTERVAL_MS, Qt.Key_2), ("Fast", 65, Qt.Key_3)): # pyright: ignore[reportAttributeAccessIssue]
+        for label, interval, key in (("Slow", 500, Qt.Key_1), # pyright: ignore[reportAttributeAccessIssue]
+                                     ("Normal", DEFAULT_INTERVAL_MS, Qt.Key_2),  # pyright: ignore[reportAttributeAccessIssue]
+                                     ("Fast", 65, Qt.Key_3)): # pyright: ignore[reportAttributeAccessIssue]
             speed_action: QAction = QAction(label, self, checkable=True)
             speed_action.setShortcut(key)
-            speed_action.triggered.connect(lambda checked=False, value=interval: self.set_speed(value))
+            speed_action.triggered.connect(
+                lambda checked=False, value=interval: self.set_speed(value))
             speed_menu.addAction(speed_action)
             self.speed_actions.append(speed_action)
         self.speed_actions[1].setChecked(True)
@@ -181,14 +194,18 @@ class MainWindow(QMainWindow):
         for name, cells in PATTERNS.items():
             inserted_cells: tuple[Cell, ...] = cells
             pattern_action: QAction = QAction(name, self)
-            pattern_action.triggered.connect(lambda checked=False, seed=inserted_cells: self.load_pattern(seed))
+            pattern_action.triggered.connect(
+                lambda checked=False, seed=inserted_cells: self.load_pattern(seed))
             pattern_menu.addAction(pattern_action)
 
         view_menu: QMenu = self.menuBar().addMenu("View")
         view_menu.addActions((self.zoom_in_action, self.zoom_out_action, self.center_action))
         pan_menu: QMenu = view_menu.addMenu("Pan")
-        pan_menu.addActions((self.pan_left_action, self.pan_right_action, self.pan_up_action, self.pan_down_action))
-
+        pan_menu.addActions((
+            self.pan_left_action, 
+            self.pan_right_action, 
+            self.pan_up_action, 
+            self.pan_down_action))
         help_menu: QMenu = self.menuBar().addMenu("Help")
         help_menu.addAction(self.about_action)
 
@@ -201,11 +218,15 @@ class MainWindow(QMainWindow):
         """Replace the universe with a fresh randomized starting pattern."""
         self.pause()
         self.canvas.clear_transitions()
+        _start_column: int = -NEW_WINDOW_FILL_WIDTH // 2
+        _end_column: int = NEW_WINDOW_FILL_WIDTH + _start_column
+        _start_row: int = -NEW_WINDOW_FILL_HEIGHT // 2
+        _end_row: int = NEW_WINDOW_FILL_HEIGHT + _start_row
         cells: set[Cell] = {
             (column, row)
-            for column in range(-22, 23)
-            for row in range(-16, 17)
-            if random.SystemRandom().random() < 0.28
+            for column in range(_start_column, _end_column)
+            for row in range(_start_row, _end_row)
+            if random.SystemRandom().random() < NEW_WINDOW_RANDOM_FILL_PROBABILITY
         }
         self.universe.set_cells(cells)
         self.canvas.center_on_cells()
@@ -260,7 +281,8 @@ class MainWindow(QMainWindow):
 
     def update_status(self) -> None:
         """Show the current generation number and live-cell population."""
-        self.status.showMessage(f"Generation: {self.universe.generation}    Population: {self.universe.population}")
+        self.status.showMessage(
+            f"Generation: {self.universe.generation}    Population: {self.universe.population}")
 
     def show_about(self) -> None:
         """Display the app's version, author, and control summary."""
@@ -271,7 +293,9 @@ class MainWindow(QMainWindow):
             f"Author: {AUTHOR}\n"
             f"Build date: {BUILD_DATE}\n"
             f"Version: {VERSION}\n\n"
-            "Click cells to toggle life. Drag to pan, use the arrow keys to pan, or scroll to zoom.\n\n"
+            "Click cells to toggle life. "
+            "Arrow keys to pan, "
+             "+/- to zoom.\n\n"
             "Rules: a live cell survives with two or three neighbours; "
             "a dead cell is born with exactly three neighbours (B3/S23).",
         )

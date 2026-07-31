@@ -9,17 +9,23 @@ BACKGROUND_COLOR: Final[QColor] = QColor("#000000")
 GRID_COLOR: Final[QColor] = QColor(90, 90, 90, 115)
 MIN_CELL_SIZE: Final[float] = 4.0
 MAX_CELL_SIZE: Final[float] = 64.0
+PAN_INCREMENT_CELLS: Final[int] = 4
+ZOOM_MULTIPLIER: Final[float] = 1.18
+WHEEL_ZOOM_MULTIPLIER: Final[float] = 1.02
 
 class LifeCanvas(QWidget):
     """Pannable, zoomable viewport over a sparse infinite Life universe."""
 
     changed: Signal = Signal()
 
-    def __init__(self, universe: LifeUniverse, transition_duration_ms: int, parent: QWidget | None = None) -> None:
+    def __init__(self, 
+                 universe: LifeUniverse, 
+                 cell_size: float,
+                 parent: QWidget | None = None) -> None:
         """Create a canvas that displays and edits a Life universe."""
         super().__init__(parent)
         self.universe: LifeUniverse = universe
-        self.cell_size = min(self.width() / 50, self.height() / 40)
+        self.cell_size: float = cell_size
         self.origin: QPointF = QPointF()
         self._last_drag_position: QPointF | None = None
         self._last_toggled_cell: Cell | None = None
@@ -33,13 +39,15 @@ class LifeCanvas(QWidget):
         self._animation_timer.setInterval(ANIMATION_FRAME_INTERVAL_MS)
         self._animation_timer.timeout.connect(self._advance_transition)
         self.setMouseTracking(True)
-        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, 
+                           QSizePolicy.Policy.Expanding)
 
     def showEvent(self, event: QEvent) -> None:
         """Center the empty universe when the canvas first becomes visible."""
         super().showEvent(event) # pyright: ignore[reportArgumentType]
         if self.origin.isNull():
-            self.origin = QPointF(self.width() / 2, self.height() / 2)
+            self.origin = QPointF(self.width() / 2, 
+            self.height() / 2)
 
     def cell_at(self, point: QPointF) -> Cell:
         """Convert a canvas point to its corresponding grid cell."""
@@ -63,30 +71,48 @@ class LifeCanvas(QWidget):
             self.origin = QPointF(self.width() / 2, self.height() / 2)
             self.update()
             return
-        average_column: float = sum(cell[0] for cell in self.universe.live_cells) / self.universe.population
-        average_row: float = sum(cell[1] for cell in self.universe.live_cells) / self.universe.population
+        average_column: float = sum(cell[0] 
+                                    for cell in self.universe.live_cells) / self.universe.population
+        average_row: float = sum(cell[1] 
+                                 for cell in self.universe.live_cells) / self.universe.population
         self.origin = QPointF(
             self.width() / 2 - average_column * self.cell_size,
             self.height() / 2 - average_row * self.cell_size,
         )
         self.update()
 
+    def zoom_in(self) -> None:
+        """Zoom in on the canvas."""
+        self.zoom(ZOOM_MULTIPLIER)
+
+    def zoom_out(self) -> None:
+        """Zoom out of the canvas."""
+        self.zoom(1 / ZOOM_MULTIPLIER)
+
     def zoom(self, multiplier: float, focus: QPointF | None = None) -> None:
         """Scale the viewport around an optional focus point."""
-        focus_point: QPointF = focus or QPointF(self.width() / 2, self.height() / 2)
+        focus_point: QPointF = focus or QPointF(self.width() / 2, 
+                                                self.height() / 2)
         old_size: float = self.cell_size
-        new_size: float = max(MIN_CELL_SIZE, min(MAX_CELL_SIZE, old_size * multiplier))
+        new_size: float = max(MIN_CELL_SIZE, 
+                              min(MAX_CELL_SIZE, 
+                                  old_size * multiplier))
         if new_size == old_size:
             return
         cell_x: float = (focus_point.x() - self.origin.x()) / old_size
         cell_y: float = (focus_point.y() - self.origin.y()) / old_size
         self.cell_size = new_size
-        self.origin = QPointF(focus_point.x() - cell_x * new_size, focus_point.y() - cell_y * new_size)
+        self.origin = QPointF(focus_point.x() - cell_x * new_size, 
+                              focus_point.y() - cell_y * new_size)
+        self.center_on_cells()
         self.update()
 
-    def pan_by_cells(self, column_offset: int, row_offset: int) -> None:
-        """Move the viewport by a fixed number of cells."""
-        self.origin -= QPointF(column_offset * self.cell_size, row_offset * self.cell_size)
+    def pan_by_cells(self, column_direction: int, row_direction: int) -> None:
+        """Move the viewport by a fixed number of cells.  
+        negative values move left or up, positive values move right or down, zero does not move."""
+        column_offset: float = column_direction * PAN_INCREMENT_CELLS * self.cell_size
+        row_offset: float = row_direction * PAN_INCREMENT_CELLS * self.cell_size
+        self.origin -= QPointF(column_offset, row_offset)
         self.update()
 
     def animate_generation_transition(
@@ -119,7 +145,8 @@ class LifeCanvas(QWidget):
         if not self._transition_clock.isValid():
             return 1.0
         elapsed_ms: int = self._transition_clock.elapsed()
-        return min(1.0, elapsed_ms / self.transition_duration_ms)
+        return min(1.0, 
+                   elapsed_ms / self.transition_duration_ms)
 
     def _advance_transition(self) -> None:
         """Request animation frames until the birth and death transition completes."""
@@ -142,7 +169,8 @@ class LifeCanvas(QWidget):
         if facing_scale <= 0.0 or opacity <= 0.0:
             return
         base_rectangle: QRectF = self.cell_rect(cell).adjusted(1.0, 1.0, -1.0, -1.0)
-        visible_width: float = base_rectangle.width() * min(1.0, facing_scale)
+        visible_width: float = base_rectangle.width() * min(1.0, 
+                                                            facing_scale)
         visible_left: float = base_rectangle.center().x() - visible_width / 2
         visible_rectangle: QRectF = QRectF(
             visible_left,
@@ -151,7 +179,8 @@ class LifeCanvas(QWidget):
             base_rectangle.height(),
         )
         cell_color: QColor = QColor(color)
-        cell_color.setAlphaF(min(1.0, opacity))
+        cell_color.setAlphaF(min(1.0, 
+                                 opacity))
         painter.setBrush(cell_color)
         painter.drawRect(visible_rectangle)
 
@@ -170,22 +199,34 @@ class LifeCanvas(QWidget):
             end_row: int = int((self.height() - self.origin.y()) // self.cell_size) + 1
             for column in range(start_column, end_column + 1):
                 x: float = self.origin.x() + column * self.cell_size
-                painter.drawLine(QPointF(x, 0), QPointF(x, self.height()))
+                painter.drawLine(QPointF(x, 0), 
+                                 QPointF(x, self.height()))
             for row in range(start_row, end_row + 1):
                 y: float = self.origin.y() + row * self.cell_size
-                painter.drawLine(QPointF(0, y), QPointF(self.width(), y))
+                painter.drawLine(QPointF(0, y), 
+                                 QPointF(self.width(), y))
 
         live_color: QColor = self.palette().highlight().color()
         painter.setPen(Qt.PenStyle.NoPen)
         transition_progress: float = self._transition_progress()
         stable_cells: set[Cell] = self.universe.live_cells - self._birth_cells
         for cell in stable_cells:
-            self._draw_cell(painter, cell, live_color)
+            self._draw_cell(painter, 
+                            cell, 
+                            live_color)
         for cell in self._birth_cells:
-            self._draw_cell(painter, cell, live_color, transition_progress, transition_progress)
+            self._draw_cell(painter, 
+                            cell, 
+                            live_color, 
+                            transition_progress, 
+                            transition_progress)
         death_scale: float = 1.0 - transition_progress
         for cell in self._death_cells:
-            self._draw_cell(painter, cell, live_color, death_scale, death_scale)
+            self._draw_cell(painter, 
+                            cell, 
+                            live_color, 
+                            death_scale, 
+                            death_scale)
 
     def mousePressEvent(self, event: QMouseEvent) -> None:
         """Start a cell-edit stroke or a mouse-button pan gesture."""
@@ -239,5 +280,7 @@ class LifeCanvas(QWidget):
 
     def wheelEvent(self, event: QWheelEvent) -> None:
         """Zoom the viewport in response to a scroll-wheel gesture."""
-        multiplier: float = 1.18 if event.angleDelta().y() > 0 else 1 / 1.18
-        self.zoom(multiplier, event.position())
+        if event.angleDelta().y() > 0:
+            self.zoom(WHEEL_ZOOM_MULTIPLIER)
+        else:
+            self.zoom(1 / WHEEL_ZOOM_MULTIPLIER) 
