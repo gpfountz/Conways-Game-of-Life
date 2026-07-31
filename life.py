@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections import Counter
 from collections.abc import Iterable
-from typing import Final, TypeAlias
+from typing import TypeAlias
 
 Cell: TypeAlias = tuple[int, int]
 """A grid cell in Conway's Game of Life, represented as (column, row)."""
