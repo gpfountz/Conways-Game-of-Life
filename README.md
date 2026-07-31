@@ -15,10 +15,16 @@ python3 -m venv .venv
 .venv/bin/python main.py
 ```
 
-After the initial setup, launch it again with:
+After the initial setup, launch app with:
 
 ```zsh
 .venv/bin/python main.py
+```
+
+run tests with:
+
+```zsh
+PYTHONPATH=. .venv/bin/python tests/test_*.py
 ```
 
 ## Deployment
