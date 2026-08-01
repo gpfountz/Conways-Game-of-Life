@@ -1,5 +1,5 @@
 #!/bin/sh
-rm -rf build dist
+rm -rf build dist src/conways_game_of_life.egg-info
 python3 -m venv .build-venv
 .build-venv/bin/python -m pip install --upgrade pip
 .build-venv/bin/python -m pip wheel --no-deps . --wheel-dir dist

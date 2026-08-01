@@ -50,7 +50,7 @@ Requires Python 3.10 or later. From the project checkout, run:
 
 ```zsh
 # 1. Build a wheel from this checkout.
-rm -rf build dist
+rm -rf build dist src/conways_game_of_life.egg-info
 python3 -m venv .build-venv
 .build-venv/bin/python -m pip install --upgrade pip
 .build-venv/bin/python -m pip wheel --no-deps . --wheel-dir dist
