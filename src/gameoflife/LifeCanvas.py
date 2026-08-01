@@ -168,7 +168,6 @@ class LifeCanvas(QWidget):
         if facing_scale <= 0.0 or opacity <= 0.0:
             return
         base_rectangle: QRectF = self.cell_rect(cell).adjusted(1.0, 1.0, -1.0, -1.0)
-        base_rectangle = self.cell_rect(cell).adjusted(1.0, 1.0, -1.0, -1.0)
         if not base_rectangle.intersects(QRectF(self.rect())):
             return
         visible_width: float = base_rectangle.width() * min(1.0, 
