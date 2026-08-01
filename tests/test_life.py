@@ -1,6 +1,6 @@
 """Unit tests for the pure Life rule engine."""
 
-from life import LifeUniverse, cells_on_line
+from gameoflife.life import LifeUniverse, cells_on_line
 
 
 def test_cells_on_line_includes_every_cell_between_endpoints() -> None:

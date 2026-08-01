@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Final, TypeAlias
 
-from life import Cell
+from gameoflife.life import Cell
 
 Pattern: TypeAlias = tuple[Cell, ...]
 

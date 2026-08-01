@@ -14,10 +14,10 @@ dependencies = [
 ]
 
 [project.scripts]
-conways-game-of-life = "main:main"
+conways-game-of-life = "gameoflife.main:main"
 
-[tool.setuptools]
-py-modules = ["life", "main", "patterns", "LifeCanvas"]
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.setuptools.data-files]
 "share/conways-game-of-life" = [

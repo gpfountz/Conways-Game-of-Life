@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from gameoflife import __version__
 import random
 import sys
 from collections.abc import Callable, MutableMapping
@@ -18,14 +19,14 @@ from PySide6.QtWidgets import (
     QStatusBar,
 )
 
-from LifeCanvas import LifeCanvas
-from life import Cell, LifeUniverse
-from patterns import PATTERNS
+from gameoflife.LifeCanvas import LifeCanvas
+from gameoflife.life import Cell, LifeUniverse
+from gameoflife.patterns import PATTERNS
 
 APP_NAME: Final[str] = "Conway's Game of Life"
 AUTHOR: Final[str] = "Greg Pfountz"
 BUILD_DATE: Final[str] = "July 26, 2026"
-VERSION: Final[str] = "1.0.12"
+VERSION: Final[str] = __version__
 ICON_FILE_NAME: Final[str] = "conways-life-icon.png"
 INSTALLED_ASSET_DIRECTORY: Final[Path] = Path("share/conways-game-of-life")
 WINDOW_SIZE_SCALE: Final[float] = 0.8
@@ -292,7 +293,7 @@ class MainWindow(QMainWindow):
             f"{APP_NAME}\n\n"
             f"Author: {AUTHOR}\n"
             f"Build date: {BUILD_DATE}\n"
-            f"Version: {VERSION}\n\n"
+            f"Version: {__version__}\n\n"
             "Click cells to toggle life.\n"
             "Arrow keys to pan, "
              "+/- to zoom.\n\n"
