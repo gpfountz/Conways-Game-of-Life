@@ -1,5 +1,5 @@
 from typing import Final
-from life import Cell, LifeUniverse, cells_on_line
+from gameoflife.life import Cell, LifeUniverse, cells_on_line
 from PySide6.QtCore import QElapsedTimer, QEvent, QPointF, QRectF, QTimer, Qt, Signal
 from PySide6.QtGui import QColor, QMouseEvent, QPaintEvent, QPainter, QPen, QWheelEvent
 from PySide6.QtWidgets import QSizePolicy, QWidget
