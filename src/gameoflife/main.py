@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Final, Protocol, cast
 
 from PySide6.QtCore import QSettings, Qt, QTimer
-from PySide6.QtGui import QAction, QIcon, QKeySequence, QResizeEvent
+from PySide6.QtGui import QAction, QCloseEvent, QIcon, QKeySequence, QResizeEvent
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -122,8 +122,8 @@ class MainWindow(QMainWindow):
         self.update_status()
         QTimer.singleShot(0, self.new_universe)
 
-    def closeEvent(self, event):
-        # Save geometry when the window is closed
+    def closeEvent(self, event: QCloseEvent) -> None:
+        """Save geometry when the window is closed."""
         self.settings.setValue("geometry", self.saveGeometry())
         super().closeEvent(event)
 
