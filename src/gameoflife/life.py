@@ -80,7 +80,7 @@ class LifeUniverse:
 
         # set comprehension: consise expression to generate a set collection
         # generate a set of live_cells with 3 neighbors, or 2 neighbors if already alive
-        self.live_cells = { 
+        self.live_cells = {
             cell
             for cell, count in neighbors.items()
             if count == 3 or (count == 2 and cell in self.live_cells)

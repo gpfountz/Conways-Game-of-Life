@@ -79,7 +79,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.universe: LifeUniverse = LifeUniverse()
         self.canvas: LifeCanvas = LifeCanvas(self.universe,
-                                             min(self.width() / NEW_WINDOW_WIDTH, 
+                                             min(self.width() / NEW_WINDOW_WIDTH,
                                                  self.height() / NEW_WINDOW_HEIGHT))
         self.timer: QTimer = QTimer(self)
         self.timer.setInterval(DEFAULT_INTERVAL_MS)
@@ -106,13 +106,13 @@ class MainWindow(QMainWindow):
         # Restore geometry if it exists
         if self.settings.contains("geometry"):
             self.restoreGeometry(self.settings.value("geometry"))
-            _zoom_amount: float = min(self.width() / NEW_WINDOW_WIDTH, 
+            _zoom_amount: float = min(self.width() / NEW_WINDOW_WIDTH,
                                       self.height() / NEW_WINDOW_HEIGHT) / self.cell_size
             self.canvas.zoom(_zoom_amount)  # Ensure cell size is set correctly after window resize
-            self.cell_size = min(self.width() / NEW_WINDOW_WIDTH, 
+            self.cell_size = min(self.width() / NEW_WINDOW_WIDTH,
                                  self.height() / NEW_WINDOW_HEIGHT)
         else:
-            self.resize(int(QApplication.primaryScreen().size().width() * WINDOW_SIZE_SCALE), 
+            self.resize(int(QApplication.primaryScreen().size().width() * WINDOW_SIZE_SCALE),
                         int(QApplication.primaryScreen().size().height() * WINDOW_SIZE_SCALE))
         self.setCentralWidget(self.canvas)
         self.canvas.changed.connect(self.update_status)
@@ -129,7 +129,7 @@ class MainWindow(QMainWindow):
 
     def resizeEvent(self, event: QResizeEvent) -> None:
         _old_cell_size = self.cell_size
-        self.cell_size = min(self.width() / NEW_WINDOW_WIDTH, 
+        self.cell_size = min(self.width() / NEW_WINDOW_WIDTH,
                              self.height() / NEW_WINDOW_HEIGHT)
         self.canvas.zoom(self.cell_size / _old_cell_size)
         super().resizeEvent(event)
@@ -202,9 +202,9 @@ class MainWindow(QMainWindow):
         view_menu.addActions((self.zoom_in_action, self.zoom_out_action, self.center_action))
         pan_menu: QMenu = view_menu.addMenu("Pan")
         pan_menu.addActions((
-            self.pan_left_action, 
-            self.pan_right_action, 
-            self.pan_up_action, 
+            self.pan_left_action,
+            self.pan_right_action,
+            self.pan_up_action,
             self.pan_down_action))
         help_menu: QMenu = self.menuBar().addMenu("Help")
         help_menu.addAction(self.about_action)
