@@ -72,7 +72,7 @@ class LifeUniverse:
 
         # For each cell, add one to each neighbor's count
         neighbors: Counter[Cell] = Counter()
-        for column, row in self.live_cells: # pyright: ignore[reportGeneralTypeIssues]
+        for column, row in self.live_cells:
             for delta_column in (-1, 0, 1):
                 for delta_row in (-1, 0, 1):
                     if delta_column != 0 or delta_row != 0:

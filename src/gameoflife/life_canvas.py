@@ -1,7 +1,7 @@
 from typing import Final
 from gameoflife.life import Cell, LifeUniverse, cells_on_line
 from PySide6.QtCore import QElapsedTimer, QEvent, QPointF, QRectF, QTimer, Qt, Signal
-from PySide6.QtGui import QColor, QMouseEvent, QPaintEvent, QPainter, QPen, QWheelEvent
+from PySide6.QtGui import QColor, QMouseEvent, QPaintEvent, QPainter, QPen, QShowEvent, QWheelEvent
 from PySide6.QtWidgets import QSizePolicy, QWidget
 
 ANIMATION_FRAME_INTERVAL_MS: Final[int] = 16
@@ -42,9 +42,9 @@ class LifeCanvas(QWidget):
         self.setSizePolicy(QSizePolicy.Policy.Expanding,
                            QSizePolicy.Policy.Expanding)
 
-    def showEvent(self, event: QEvent) -> None:
+    def showEvent(self, event: QShowEvent) -> None:
         """Center the empty universe when the canvas first becomes visible."""
-        super().showEvent(event) # pyright: ignore[reportArgumentType]
+        super().showEvent(event)
         if self.origin.isNull():
             self.origin = QPointF(self.width() / 2,
             self.height() / 2)
