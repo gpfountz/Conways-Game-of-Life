@@ -1,8 +1,18 @@
 from typing import Final
-from gameoflife.life import Cell, LifeUniverse, cells_on_line
-from PySide6.QtCore import QElapsedTimer, QEvent, QPointF, QRectF, QTimer, Qt, Signal
-from PySide6.QtGui import QColor, QMouseEvent, QPaintEvent, QPainter, QPen, QShowEvent, QWheelEvent
+
+from PySide6.QtCore import QElapsedTimer, QEvent, QPointF, QRectF, Qt, QTimer, Signal
+from PySide6.QtGui import (
+    QColor,
+    QMouseEvent,
+    QPainter,
+    QPaintEvent,
+    QPen,
+    QShowEvent,
+    QWheelEvent,
+)
 from PySide6.QtWidgets import QSizePolicy, QWidget
+
+from gameoflife.life import Cell, LifeUniverse, cells_on_line
 
 ANIMATION_FRAME_INTERVAL_MS: Final[int] = 16
 BACKGROUND_COLOR: Final[QColor] = QColor("#000000")

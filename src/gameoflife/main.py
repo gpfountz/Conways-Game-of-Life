@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from gameoflife import __version__
 import random
 import sys
 from collections.abc import Callable, MutableMapping
@@ -10,7 +9,14 @@ from pathlib import Path
 from typing import Final, Protocol, cast
 
 from PySide6.QtCore import QSettings, Qt, QTimer
-from PySide6.QtGui import QAction, QActionGroup, QCloseEvent, QIcon, QKeySequence, QResizeEvent
+from PySide6.QtGui import (
+    QAction,
+    QActionGroup,
+    QCloseEvent,
+    QIcon,
+    QKeySequence,
+    QResizeEvent,
+)
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -19,8 +25,9 @@ from PySide6.QtWidgets import (
     QStatusBar,
 )
 
-from gameoflife.life_canvas import LifeCanvas
+from gameoflife import __version__
 from gameoflife.life import Cell, LifeUniverse
+from gameoflife.life_canvas import LifeCanvas
 from gameoflife.patterns import PATTERNS
 
 APP_NAME: Final[str] = "Conway's Game of Life"
@@ -62,7 +69,7 @@ def configure_macos_bundle_name() -> None:
     if sys.platform != "darwin":
         return
 
-    from Foundation import NSBundle # pyright: ignore[reportAttributeAccessIssue]
+    from Foundation import NSBundle  # pyright: ignore[reportAttributeAccessIssue]
 
     bundle: MacOSBundle = cast(MacOSBundle, NSBundle.mainBundle())
     bundle_info: MutableMapping[str, str] | None = bundle.localizedInfoDictionary() or bundle.infoDictionary()
