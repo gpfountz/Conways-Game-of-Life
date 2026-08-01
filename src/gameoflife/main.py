@@ -19,7 +19,7 @@ from PySide6.QtWidgets import (
     QStatusBar,
 )
 
-from gameoflife.LifeCanvas import LifeCanvas
+from gameoflife.life_canvas import LifeCanvas
 from gameoflife.life import Cell, LifeUniverse
 from gameoflife.patterns import PATTERNS
 
