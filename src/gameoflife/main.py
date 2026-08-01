@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Final, Protocol, cast
 
 from PySide6.QtCore import QSettings, Qt, QTimer
-from PySide6.QtGui import QAction, QCloseEvent, QIcon, QKeySequence, QResizeEvent
+from PySide6.QtGui import QAction, QActionGroup, QCloseEvent, QIcon, QKeySequence, QResizeEvent
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -96,7 +96,7 @@ class MainWindow(QMainWindow):
         self.zoom_out_action: QAction
         self.center_action: QAction
         self.about_action: QAction
-        self.speed_actions: list[QAction] = []
+        self.speed_actions: QActionGroup = QActionGroup(self)
         self.status: QStatusBar
         self.cell_size: float = min(self.width() / NEW_WINDOW_WIDTH,
                                     self.height() / NEW_WINDOW_HEIGHT)
@@ -187,8 +187,8 @@ class MainWindow(QMainWindow):
             speed_action.triggered.connect(
                 lambda checked=False, value=interval: self.set_speed(value))
             speed_menu.addAction(speed_action)
-            self.speed_actions.append(speed_action)
-        self.speed_actions[1].setChecked(True)
+            self.speed_actions.addAction(speed_action)
+        self.speed_actions.actions()[1].setChecked(True)
 
         pattern_menu: QMenu = self.menuBar().addMenu("Patterns")
         for name, cells in PATTERNS.items():
@@ -277,7 +277,7 @@ class MainWindow(QMainWindow):
         """Set the timer interval and update the selected speed command."""
         self.timer.setInterval(interval)
         speed_labels: dict[int, str] = {500: "slow", DEFAULT_INTERVAL_MS: "normal", 65: "fast"}
-        for speed_action in self.speed_actions:
+        for speed_action in self.speed_actions.actions():
             speed_action.setChecked(speed_action.text().lower() == speed_labels[interval])
 
     def update_status(self) -> None:
