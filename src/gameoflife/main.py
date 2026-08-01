@@ -132,7 +132,6 @@ class MainWindow(QMainWindow):
         self.cell_size = min(self.width() / NEW_WINDOW_WIDTH, 
                              self.height() / NEW_WINDOW_HEIGHT)
         self.canvas.zoom(self.cell_size / _old_cell_size)
-        self.canvas.center_on_cells()
         super().resizeEvent(event)
 
     def action(
