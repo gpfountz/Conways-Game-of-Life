@@ -21,8 +21,8 @@ where = ["src"]
 
 [tool.setuptools.data-files]
 "share/conways-game-of-life" = [
-  "assets/ConwaysGameOfLife.icns",
-  "assets/conways-life-icon.png",
+  "src/gameoflife/assets/ConwaysGameOfLife.icns",
+  "src/gameoflife/assets/conways-life-icon.png",
 ]
 
 [project.optional-dependencies]
