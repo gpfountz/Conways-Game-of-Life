@@ -24,3 +24,13 @@ where = ["src"]
   "assets/ConwaysGameOfLife.icns",
   "assets/conways-life-icon.png",
 ]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0", 
+  "ruff>=0.12", 
+  "mypy>=1.0"
+  ]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

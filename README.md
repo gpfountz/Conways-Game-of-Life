@@ -7,24 +7,36 @@ A native-feeling macOS desktop implementation of Conway's Game of Life, built wi
 ## Development Run
 
 Requires Python 3.10 or later. From the project checkout, create a local
-virtual environment, install the dependencies, and launch the app:
+virtual environment and install the dependencies:
 
 ```zsh
 python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements.txt
-.venv/bin/python main.py
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python -m pip install -e ".[dev]"
 ```
 
 After the initial setup, launch app with:
 
 ```zsh
-.venv/bin/python src/gameoflife/main.py
+.venv/bin/conways-game-of-life
 ```
 
-run tests with:
+run all tests with:
 
 ```zsh
-PYTHONPATH=. .venv/bin/python tests/test_*.py
+.venv/bin/python -m pytest -q
+```
+
+run one test with:
+
+```zsh
+.venv/bin/python -m pytest -q tests/test_life.py::test_blinker_oscillates
+```
+
+run ruff python linter tests with:
+
+```zsh
+.venv/bin/python -m ruff check src tests; .venv/bin/python -m mypy --strict src tests
 ```
 
 ## Deployment
