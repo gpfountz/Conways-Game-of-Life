@@ -1,6 +1,6 @@
 from typing import Final
 
-from PySide6.QtCore import QElapsedTimer, QEvent, QPointF, QRectF, Qt, QTimer, Signal
+from PySide6.QtCore import QElapsedTimer, QPointF, QRectF, Qt, QTimer, Signal
 from PySide6.QtGui import (
     QColor,
     QMouseEvent,
