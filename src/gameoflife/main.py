@@ -186,9 +186,9 @@ class MainWindow(QMainWindow):
         game_menu.addActions((self.run_action, self.step_action))
         game_menu.addSeparator()
         speed_menu: QMenu = game_menu.addMenu("Simulation Speed")
-        for label, interval, key in (("Slow", 500, Qt.Key_1), # pyright: ignore[reportAttributeAccessIssue]
-                                     ("Normal", DEFAULT_INTERVAL_MS, Qt.Key_2),  # pyright: ignore[reportAttributeAccessIssue]
-                                     ("Fast", 65, Qt.Key_3)): # pyright: ignore[reportAttributeAccessIssue]
+        for label, interval, key in (("Slow", 500, Qt.Key.Key_1),
+                                     ("Normal", DEFAULT_INTERVAL_MS, Qt.Key.Key_2),
+                                     ("Fast", 65, Qt.Key.Key_3)):
             speed_action: QAction = QAction(label, self, checkable=True)
             speed_action.setShortcut(key)
             speed_action.triggered.connect(
@@ -321,7 +321,7 @@ def main() -> int:
         application.setWindowIcon(QIcon(str(icon_path)))
     window: MainWindow = MainWindow()
     window.show()
-    return cast(int, application.exec())
+    return application.exec()
 
 
 if __name__ == "__main__":
