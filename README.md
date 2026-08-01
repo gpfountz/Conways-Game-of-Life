@@ -1,4 +1,4 @@
-![Conway's Game of Life](assets/conways-life-icon.png)
+![Conway's Game of Life](src/gameoflife/assets/conways-life-icon.png)
 
 # Conway's Game of Life
 
