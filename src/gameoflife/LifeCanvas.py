@@ -104,7 +104,6 @@ class LifeCanvas(QWidget):
         self.cell_size = new_size
         self.origin = QPointF(focus_point.x() - cell_x * new_size, 
                               focus_point.y() - cell_y * new_size)
-        self.center_on_cells()
         self.update()
 
     def pan_by_cells(self, column_direction: int, row_direction: int) -> None:
@@ -281,6 +280,6 @@ class LifeCanvas(QWidget):
     def wheelEvent(self, event: QWheelEvent) -> None:
         """Zoom the viewport in response to a scroll-wheel gesture."""
         if event.angleDelta().y() > 0:
-            self.zoom(WHEEL_ZOOM_MULTIPLIER)
+            self.zoom(WHEEL_ZOOM_MULTIPLIER, event.position())
         else:
-            self.zoom(1 / WHEEL_ZOOM_MULTIPLIER) 
+            self.zoom(1 / WHEEL_ZOOM_MULTIPLIER, event.position())
