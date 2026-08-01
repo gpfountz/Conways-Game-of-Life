@@ -222,11 +222,12 @@ class MainWindow(QMainWindow):
         _end_column: int = NEW_WINDOW_FILL_WIDTH + _start_column
         _start_row: int = -NEW_WINDOW_FILL_HEIGHT // 2
         _end_row: int = NEW_WINDOW_FILL_HEIGHT + _start_row
+        _system_random: random.SystemRandom = random.SystemRandom()
         cells: set[Cell] = {
             (column, row)
             for column in range(_start_column, _end_column)
             for row in range(_start_row, _end_row)
-            if random.SystemRandom().random() < NEW_WINDOW_RANDOM_FILL_PROBABILITY
+            if _system_random.random() < NEW_WINDOW_RANDOM_FILL_PROBABILITY
         }
         self.universe.set_cells(cells)
         self.canvas.center_on_cells()
