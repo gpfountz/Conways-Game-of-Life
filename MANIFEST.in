@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Greg Pfountz
 # SPDX-License-Identifier: GPL-3.0-only
 # See LICENSE for license terms and the warranty disclaimer.
-include LICENSE LICENSING.md README.md AGENTS.md pyproject.toml requirements.txt
+include LICENSE LICENSING.md README.md APP_VERSIONING.md AGENTS.md pyproject.toml requirements.txt
 include redeploy.sh .gitattributes
 recursive-include scripts *.py
 recursive-include tests *.py

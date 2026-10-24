@@ -18,7 +18,7 @@ functions focused docstrings, and follow the existing formatting conventions.
 - Preserve the higher compatible version on merges, without an extra increment.
   Never downgrade or infer a major change; a major override needs a user request.
 - File saves, tests, and builds must not change the application version. Preserve
-  partial staging and the active Git index. Follow README recovery instructions.
+  partial staging and the active Git index. Follow APP_VERSIONING.md recovery instructions.
 - Run the disposable Git integration tests when changing this workflow. Do not
   commit, push, deploy, or change hosted settings solely to install versioning.
 
