@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 Greg Pfountz
+# SPDX-License-Identifier: GPL-3.0-only
+# See LICENSE for license terms and the warranty disclaimer.
 """A small collection of classic Conway's Game of Life seeds."""
 
 from __future__ import annotations

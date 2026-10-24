@@ -1,1 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Greg Pfountz
+# SPDX-License-Identifier: GPL-3.0-only
+# See LICENSE for license terms and the warranty disclaimer.
 src/gameoflife/__init__.py merge=app-version
+LICENSE -text -whitespace
+src/gameoflife/legal_texts/LICENSE -text -whitespace
+src/gameoflife/legal_texts/third-party/** -text -whitespace

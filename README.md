@@ -1,8 +1,21 @@
+<!-- SPDX-FileCopyrightText: 2026 Greg Pfountz -->
+<!-- SPDX-License-Identifier: GPL-3.0-only -->
+
 ![Conway's Game of Life](src/gameoflife/assets/conways-life-icon.png)
 
 # Conway's Game of Life
 
 A native-feeling macOS desktop implementation of Conway's Game of Life, built with PySide6.
+
+## License
+
+Copyright (C) 2026 Greg Pfountz. The original project source is licensed under
+[GNU GPL version 3 only](LICENSE) (`GPL-3.0-only`), with no warranty to the extent
+permitted by law. You may modify and redistribute it under those terms.
+See [licensing and contributions](LICENSING.md) for reuse guidance, material
+exceptions, and binary distribution status, and the
+[third-party notices](src/gameoflife/legal_texts/THIRD_PARTY_NOTICES.md) for separate
+dependency terms. The app's **About Conway's Game of Life** dialog provides offline legal texts.
 
 ## Development Run
 
@@ -25,6 +38,12 @@ run all tests with:
 
 ```zsh
 .venv/bin/python -m pytest -q
+```
+
+Check required legal resources and preserved upstream notices with:
+
+```zsh
+.venv/bin/python scripts/check_legal_resources.py
 ```
 
 run one test with:

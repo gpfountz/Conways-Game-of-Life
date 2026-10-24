@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 Greg Pfountz
+# SPDX-License-Identifier: GPL-3.0-only
+# See LICENSE for license terms and the warranty disclaimer.
 """A macOS-friendly desktop implementation of Conway's Game of Life."""
 
 from __future__ import annotations
@@ -26,6 +29,8 @@ from PySide6.QtWidgets import (
 )
 
 from gameoflife import __version__
+from gameoflife.legal import LegalResourceError
+from gameoflife.legal_dialog import LegalDialog
 from gameoflife.life import Cell, LifeUniverse
 from gameoflife.life_canvas import LifeCanvas
 from gameoflife.patterns import PATTERNS
@@ -293,10 +298,8 @@ class MainWindow(QMainWindow):
             f"Generation: {self.universe.generation}    Population: {self.universe.population}")
 
     def show_about(self) -> None:
-        """Display the app's version, author, and control summary."""
-        QMessageBox.about(
-            self,
-            f"About {APP_NAME}",
+        """Display author credit, the shared version, and offline GPL/dependency notices."""
+        about: str = (
             f"{APP_NAME}\n\n"
             f"Author: {AUTHOR}\n"
             f"Build date: {BUILD_DATE}\n"
@@ -305,8 +308,14 @@ class MainWindow(QMainWindow):
             "Arrow keys to pan, "
              "+/- to zoom.\n\n"
             "Rules: a live cell survives with two or three neighbours; "
-            "a dead cell is born with exactly three neighbours (B3/S23).",
+            "a dead cell is born with exactly three neighbours (B3/S23)."
         )
+        try:
+            dialog: LegalDialog = LegalDialog(f"About {APP_NAME}", about, self)
+        except LegalResourceError as error:
+            QMessageBox.critical(self, "Legal notices unavailable", str(error))
+            return
+        dialog.exec()
 
 
 def main() -> int:

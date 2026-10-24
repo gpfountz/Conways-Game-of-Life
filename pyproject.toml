@@ -1,5 +1,8 @@
+# SPDX-FileCopyrightText: 2026 Greg Pfountz
+# SPDX-License-Identifier: GPL-3.0-only
+# See LICENSE for license terms and the warranty disclaimer.
 [build-system]
-requires = ["setuptools>=77"]
+requires = ["setuptools>=77.0.3"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -8,6 +11,14 @@ dynamic = ["version"]
 description = "A native-feeling macOS implementation of Conway's Game of Life"
 readme = "README.md"
 requires-python = ">=3.10"
+authors = [{name = "Greg Pfountz"}]
+license = "GPL-3.0-only"
+license-files = [
+  "LICENSE",
+  "LICENSING.md",
+  "src/gameoflife/legal_texts/THIRD_PARTY_NOTICES.md",
+  "src/gameoflife/legal_texts/third-party/*/*",
+]
 dependencies = [
   "PySide6>=6.8",
   "pyobjc-framework-Cocoa>=10.0; sys_platform == 'darwin'",
@@ -21,6 +32,9 @@ where = ["src"]
 
 [tool.setuptools.dynamic]
 version = {attr = "gameoflife.__version__"}
+
+[tool.setuptools.package-data]
+gameoflife = ["legal_texts/*", "legal_texts/third-party/*/*"]
 
 [tool.setuptools.data-files]
 "share/conways-game-of-life" = [
