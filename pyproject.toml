@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "conways-game-of-life"
-version = "1.0.12"
+dynamic = ["version"]
 description = "A native-feeling macOS implementation of Conway's Game of Life"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -18,6 +18,9 @@ conways-game-of-life = "gameoflife.main:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.dynamic]
+version = {attr = "gameoflife.__version__"}
 
 [tool.setuptools.data-files]
 "share/conways-game-of-life" = [
