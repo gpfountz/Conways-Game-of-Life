@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: GPL-3.0-only
 # See LICENSE for license terms and the warranty disclaimer.
 include LICENSE LICENSING.md README.md APP_VERSIONING.md AGENTS.md pyproject.toml requirements.txt
-include redeploy.sh .gitattributes
-recursive-include scripts *.py
+include .gitattributes
+recursive-include scripts *.py *.sh
 recursive-include tests *.py
 recursive-include src/gameoflife/legal_texts *
 recursive-include src/gameoflife/assets *.png *.icns

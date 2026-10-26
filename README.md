@@ -63,51 +63,46 @@ run ruff python linter tests with:
 
 ## Deployment
 
-These instructions build a wheel, install it into an isolated virtual
-environment inside a regular macOS application bundle, and install that bundle
-in `~/Applications`. The application will then appear in Finder, Launchpad,
-and Spotlight like any other macOS application.
-
-Use Python 3.10–3.14 on macOS 13 or later. From the project checkout, run:
+Run the same command for a first installation or an update:
 
 ```zsh
-# 1. Build a wheel from this checkout.
-rm -rf build dist src/conways_game_of_life.egg-info
-python3 -m venv .build-venv
-.build-venv/bin/python -m pip install --upgrade pip
-.build-venv/bin/python -m pip wheel --no-deps . --wheel-dir dist
-
-# 2. Create the application bundle and its dedicated virtual environment.
-APP_PATH="$HOME/Applications/Conways Game of Life.app"
-mkdir -p "$APP_PATH/Contents/MacOS" "$APP_PATH/Contents/Resources"
-python3 -m venv "$APP_PATH/Contents/Resources/venv"
-
-# 3. Install the freshly built wheel into that virtual environment.
-"$APP_PATH/Contents/Resources/venv/bin/python" -m pip install \
-  "$PWD"/dist/conways_game_of_life-*.whl
-
-# 4. Add the macOS application metadata and launcher.
-cp "$APP_PATH/Contents/Resources/venv/share/conways-game-of-life/ConwaysGameOfLife.icns" \
-  "$APP_PATH/Contents/Resources/ConwaysGameOfLife.icns"
-
-.build-venv/bin/python scripts/bundle_metadata.py "$APP_PATH"
-
-cat > "$APP_PATH/Contents/MacOS/conways-game-of-life" <<'LAUNCHER'
-#!/bin/zsh
-set -euo pipefail
-APP_ROOT="${0:A:h:h}"
-exec "$APP_ROOT/Resources/venv/bin/conways-game-of-life"
-LAUNCHER
-chmod +x "$APP_PATH/Contents/MacOS/conways-game-of-life"
-
-# 5. Confirm that macOS recognizes the bundle, then launch it.
-plutil -lint "$APP_PATH/Contents/Info.plist"
-open "$APP_PATH"
+./scripts/deploy.sh
 ```
 
-To update the application later, rebuild the wheel (step 1), then repeat step
-3 and refresh its metadata with `scripts/bundle_metadata.py` (step 4). The existing
-application bundle and its virtual environment can stay in place.
+The script installs into `~/Applications/Conways Game of Life.app`. It detects
+whether that bundle already exists and reports **Install** or **Update**.
+Each run builds the current checkout, even when its application version has not
+changed. Quit the installed application before updating it.
+
+Deployment builds a wheel from a clean temporary source copy, checks its legal
+resources, and installs it and its dependencies into a fresh bundle environment.
+It refreshes the launcher, icon, and version metadata, then checks imports and
+installed dependencies. An update keeps the old bundle until the replacement
+passes verification; if verification fails after replacement, it restores the
+old bundle. Temporary build files are cleaned up automatically.
+
+Preview the detected action without changing files or downloading dependencies:
+
+```zsh
+./scripts/deploy.sh --dry-run
+```
+
+Launch the application after a successful deployment, or choose another location:
+
+```zsh
+./scripts/deploy.sh --open
+./scripts/deploy.sh --app-path "/path/to/Conways Game of Life.app"
+```
+
+Use Python 3.10–3.14 on macOS 13 or later. The script uses `.venv/bin/python`
+when available, otherwise `python3`; select another interpreter with
+`DEPLOY_PYTHON=/path/to/python3 ./scripts/deploy.sh`. Internet access is needed for
+build tools and dependencies unless they are already available through pip.
+The installed bundle depends on that external Python installation remaining
+available. This is a local installation workflow; see [LICENSING.md](LICENSING.md)
+for the separate requirements for distributing binaries.
+
+`./scripts/redeploy.sh` delegates to `scripts/deploy.sh` and accepts the same options.
 
 ## Controls
 
