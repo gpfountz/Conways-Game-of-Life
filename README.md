@@ -19,7 +19,10 @@ dependency terms. The app's **About Conway's Game of Life** dialog provides offl
 
 ## Development Run
 
-Requires Python 3.10 or later. From the project checkout, create a local
+The reviewed Qt 6.11 dependencies require Python 3.10–3.14 and macOS 13 or later.
+Qt is constrained below 6.12 to retain macOS 13 wheels; its package layout and
+platform requirements need a separate review before that bound is removed.
+From the project checkout, create a local
 virtual environment and install the dependencies:
 
 ```zsh
@@ -65,7 +68,7 @@ environment inside a regular macOS application bundle, and install that bundle
 in `~/Applications`. The application will then appear in Finder, Launchpad,
 and Spotlight like any other macOS application.
 
-Requires Python 3.10 or later. From the project checkout, run:
+Use Python 3.10–3.14 on macOS 13 or later. From the project checkout, run:
 
 ```zsh
 # 1. Build a wheel from this checkout.

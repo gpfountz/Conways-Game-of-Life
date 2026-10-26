@@ -1,88 +1,88 @@
 {
   "schema_version": 1,
-  "review_date": "2026-10-24",
-  "scope": "Source adoption and focused notice/native evidence; not a complete binary-release inventory or compliance certification.",
+  "review_date": "2026-10-26",
+  "scope": "Dependency refresh and focused notice/native evidence; not a complete binary-release inventory or compliance certification.",
   "python_version": "3.14.8",
   "platform": "darwin",
   "upstream_notices": [
     {
       "path": "third-party/FFmpeg/COPYING.LGPLv2.1",
-      "version": "n7.1.3",
+      "version": "n7.1.5",
       "origins": [
-        "https://raw.githubusercontent.com/FFmpeg/FFmpeg/n7.1.3/COPYING.LGPLv2.1"
+        "https://raw.githubusercontent.com/FFmpeg/FFmpeg/n7.1.5/COPYING.LGPLv2.1"
       ],
-      "sha256": "b634ab5640e258563c536e658cad87080553df6f34f62269a21d554844e58bfe"
+      "sha256": "246041b6ecf9bc32d718a62c57877c78b5eb397b6467e74ed7ae2626ab189c30"
     },
     {
       "path": "third-party/FFmpeg/LICENSE.md",
-      "version": "n7.1.3",
+      "version": "n7.1.5",
       "origins": [
-        "https://raw.githubusercontent.com/FFmpeg/FFmpeg/n7.1.3/LICENSE.md"
+        "https://raw.githubusercontent.com/FFmpeg/FFmpeg/n7.1.5/LICENSE.md"
       ],
       "sha256": "cb48bf09a11f5fb576cddb0431c8f5ed0a60157a9ec942adffc13907cbe083f2"
     },
     {
       "path": "third-party/PyObjC/LICENSE.txt",
-      "version": "12.2.1",
+      "version": "12.2.2",
       "origins": [
-        "https://raw.githubusercontent.com/ronaldoussoren/pyobjc/v12.2.1/pyobjc-core/License.txt",
-        "pyobjc_framework_cocoa-12.2.1.dist-info/licenses/LICENSE.txt"
+        "https://raw.githubusercontent.com/ronaldoussoren/pyobjc/v12.2.2/pyobjc-core/License.txt",
+        "pyobjc_framework_cocoa-12.2.2.dist-info/licenses/LICENSE.txt"
       ],
       "sha256": "0ca04b07928d4872b9d9bb22187ca0426dd8bfab08f26eada0999a71dc81aaff"
     },
     {
       "path": "third-party/PySide6/Apache-2.0.txt",
-      "version": "6.11.1",
+      "version": "6.11.3",
       "origins": [
-        "https://raw.githubusercontent.com/pyside/pyside-setup/v6.11.1/LICENSES/Apache-2.0.txt"
+        "https://raw.githubusercontent.com/pyside/pyside-setup/v6.11.3/LICENSES/Apache-2.0.txt"
       ],
       "sha256": "e3ba223bb1423f0aad8c3dfce0fe3148db48926d41e6fbc3afbbf5ff9e1c89cb"
     },
     {
       "path": "third-party/PySide6/BSD-3-Clause.txt",
-      "version": "6.11.1",
+      "version": "6.11.3",
       "origins": [
-        "https://raw.githubusercontent.com/pyside/pyside-setup/v6.11.1/LICENSES/BSD-3-Clause.txt"
+        "https://raw.githubusercontent.com/pyside/pyside-setup/v6.11.3/LICENSES/BSD-3-Clause.txt"
       ],
       "sha256": "62803a6fcceef9091a129d7293d2469ea332b35d30f5e1bc4c628a9f35f3d29c"
     },
     {
       "path": "third-party/PySide6/GFDL-1.3-no-invariants-only.txt",
-      "version": "6.11.1",
+      "version": "6.11.3",
       "origins": [
-        "https://raw.githubusercontent.com/pyside/pyside-setup/v6.11.1/LICENSES/GFDL-1.3-no-invariants-only.txt"
+        "https://raw.githubusercontent.com/pyside/pyside-setup/v6.11.3/LICENSES/GFDL-1.3-no-invariants-only.txt"
       ],
       "sha256": "110535522396708cea37c72a802c5e7e81391139f5f7985631c93ef242b206a4"
     },
     {
       "path": "third-party/PySide6/GPL-2.0-only.txt",
-      "version": "6.11.1",
+      "version": "6.11.3",
       "origins": [
-        "https://raw.githubusercontent.com/pyside/pyside-setup/v6.11.1/LICENSES/GPL-2.0-only.txt"
+        "https://raw.githubusercontent.com/pyside/pyside-setup/v6.11.3/LICENSES/GPL-2.0-only.txt"
       ],
       "sha256": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643"
     },
     {
       "path": "third-party/PySide6/GPL-3.0-only.txt",
-      "version": "6.11.1",
+      "version": "6.11.3",
       "origins": [
-        "https://raw.githubusercontent.com/pyside/pyside-setup/v6.11.1/LICENSES/GPL-3.0-only.txt"
+        "https://raw.githubusercontent.com/pyside/pyside-setup/v6.11.3/LICENSES/GPL-3.0-only.txt"
       ],
       "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
     },
     {
       "path": "third-party/PySide6/LGPL-3.0-only.txt",
-      "version": "6.11.1",
+      "version": "6.11.3",
       "origins": [
-        "https://raw.githubusercontent.com/pyside/pyside-setup/v6.11.1/LICENSES/LGPL-3.0-only.txt"
+        "https://raw.githubusercontent.com/pyside/pyside-setup/v6.11.3/LICENSES/LGPL-3.0-only.txt"
       ],
       "sha256": "da7eabb7bafdf7d3ae5e9f223aa5bdc1eece45ac569dc21b3b037520b4464768"
     },
     {
       "path": "third-party/PySide6/Qt-GPL-exception-1.0.txt",
-      "version": "6.11.1",
+      "version": "6.11.3",
       "origins": [
-        "https://raw.githubusercontent.com/pyside/pyside-setup/v6.11.1/LICENSES/Qt-GPL-exception-1.0.txt"
+        "https://raw.githubusercontent.com/pyside/pyside-setup/v6.11.3/LICENSES/Qt-GPL-exception-1.0.txt"
       ],
       "sha256": "40678d338ce53cd93f8b22b281a2ecbcaa3ee65ce60b25ffb0c462b0530846b2"
     },
@@ -98,12 +98,12 @@
   "runtime_distributions": [
     {
       "name": "PySide6",
-      "version": "6.11.1",
+      "version": "6.11.3",
       "declared_license": "LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only",
       "requires": [
-        "shiboken6==6.11.1",
-        "PySide6_Essentials==6.11.1",
-        "PySide6_Addons==6.11.1",
+        "shiboken6==6.11.3",
+        "PySide6_Essentials==6.11.3",
+        "PySide6_Addons==6.11.3",
         "tomli>=2.0.1; python_version < \"3.11\""
       ],
       "wheel_tags": [
@@ -114,34 +114,34 @@
     },
     {
       "name": "PySide6_Essentials",
-      "version": "6.11.1",
+      "version": "6.11.3",
       "declared_license": "LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only",
       "requires": [
-        "shiboken6==6.11.1"
+        "shiboken6==6.11.3"
       ],
       "wheel_tags": [
         "cp310-abi3-macosx_13_0_universal2"
       ],
-      "native_record_count": 210,
+      "native_record_count": 211,
       "legal_records": []
     },
     {
       "name": "PySide6_Addons",
-      "version": "6.11.1",
+      "version": "6.11.3",
       "declared_license": "LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only",
       "requires": [
-        "shiboken6==6.11.1",
-        "PySide6_Essentials==6.11.1"
+        "shiboken6==6.11.3",
+        "PySide6_Essentials==6.11.3"
       ],
       "wheel_tags": [
         "cp310-abi3-macosx_13_0_universal2"
       ],
-      "native_record_count": 179,
+      "native_record_count": 178,
       "legal_records": []
     },
     {
       "name": "shiboken6",
-      "version": "6.11.1",
+      "version": "6.11.3",
       "declared_license": "LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only",
       "requires": [],
       "wheel_tags": [
@@ -152,7 +152,7 @@
     },
     {
       "name": "pyobjc-core",
-      "version": "12.2.1",
+      "version": "12.2.2",
       "declared_license": "MIT",
       "requires": [],
       "wheel_tags": [
@@ -163,25 +163,25 @@
     },
     {
       "name": "pyobjc-framework-Cocoa",
-      "version": "12.2.1",
+      "version": "12.2.2",
       "declared_license": "MIT",
       "requires": [
-        "pyobjc-core>=12.2.1"
+        "pyobjc-core>=12.2.2"
       ],
       "wheel_tags": [
         "cp314-cp314-macosx_10_15_universal2"
       ],
       "native_record_count": 6,
       "legal_records": [
-        "pyobjc_framework_cocoa-12.2.1.dist-info/licenses/LICENSE.txt"
+        "pyobjc_framework_cocoa-12.2.2.dist-info/licenses/LICENSE.txt"
       ]
     }
   ],
   "representative_native_evidence": [
     {
       "path": "PySide6/Qt/lib/QtCore.framework/Versions/A/QtCore",
-      "sha256": "82d43b6139c6ac33a901b888c4b924004a365762b8d0067e14f2b1ed72244efa",
-      "size": 12612712,
+      "sha256": "612f3f71eb28a19d45e1ec9c0599448ecc1415e7a5ab57c23388012b7a95be75",
+      "size": 12661992,
       "architectures": [
         "x86_64",
         "arm64"
@@ -189,22 +189,22 @@
     },
     {
       "path": "PySide6/Qt/lib/libavcodec.61.19.101.dylib",
-      "sha256": "82065e3fa6ad14005ea2f62460fef08618cff99d4a5193f6872ca1a4b7324498",
-      "size": 28361800,
+      "sha256": "ff6ffd6d1c0b3410f49e8db2353d1cbc0e7f1262187cfe1e4a2730e4e2eb0581",
+      "size": 28345288,
       "architectures": [
         "x86_64",
         "arm64"
       ],
       "embedded_configuration": [
-        "--disable-programs --disable-doc --disable-debug --enable-network --disable-lzma --enable-pic --disable-vulkan --disable-v4l2-m2m --disable-decoder=truemotion1 --enable-shared --disable-static --prefix=/usr/local/FFmpeg-n7.1.3 --enable-cross-compile --arch=x86_64 --cc='clang -arch x86_64'",
+        "--disable-programs --disable-doc --disable-debug --enable-network --disable-lzma --enable-pic --disable-vulkan --disable-v4l2-m2m --disable-decoder=truemotion1 --disable-avdevice --disable-avfilter --enable-shared --disable-static --prefix=/usr/local/FFmpeg-n7.1.5 --enable-cross-compile --arch=x86_64 --cc='clang -arch x86_64'",
         "libavcodec license: LGPL version 2.1 or later",
-        "--disable-programs --disable-doc --disable-debug --enable-network --disable-lzma --enable-pic --disable-vulkan --disable-v4l2-m2m --disable-decoder=truemotion1 --enable-shared --disable-static --prefix=/usr/local/FFmpeg-n7.1.3 --enable-cross-compile --arch=arm64 --cc='clang -arch arm64'",
+        "--disable-programs --disable-doc --disable-debug --enable-network --disable-lzma --enable-pic --disable-vulkan --disable-v4l2-m2m --disable-decoder=truemotion1 --disable-avdevice --disable-avfilter --enable-shared --disable-static --prefix=/usr/local/FFmpeg-n7.1.5 --enable-cross-compile --arch=arm64 --cc='clang -arch arm64'",
         "libavcodec license: LGPL version 2.1 or later"
       ]
     },
     {
       "path": "shiboken6/Shiboken.abi3.so",
-      "sha256": "f6a0a151244555c694bdc06830d463179d89d3f1d58561b19c1ef7472308483c",
+      "sha256": "78cca50d70a349a06964854d52454b0cc460fbc15608c2156a05619f15e38b4d",
       "size": 107376,
       "architectures": [
         "x86_64",
@@ -213,7 +213,7 @@
     },
     {
       "path": "objc/_objc.cpython-314-darwin.so",
-      "sha256": "e907e9b8ced12b32fc23f576db33d9d8048cf13824241845949de5d316fe661b",
+      "sha256": "23cac76376ea7549ccccc017314f9c636132aa7d73a85e8573416afcabc7933d",
       "size": 1872936,
       "architectures": [
         "x86_64",
@@ -227,5 +227,49 @@
     "Matching dependency source and build/install materials for a future binary release.",
     "Pip/interpreter payload review for the actual release bundle.",
     "Final portable bundle extraction/signature/runtime verification."
+  ],
+  "runtime_wheels": [
+    {
+      "name": "PySide6",
+      "version": "6.11.3",
+      "filename": "pyside6-6.11.3-cp310-abi3-macosx_13_0_universal2.whl",
+      "url": "https://files.pythonhosted.org/packages/56/5d/32f8f137e0887e0e4b580f1f8962b9dca3268f7d2d908a7a61207bab6d83/pyside6-6.11.3-cp310-abi3-macosx_13_0_universal2.whl",
+      "sha256": "f52e98bfcc409e2cec4d70b4ca47e11a51737d48b3ea2a0a1af23652bfb8395a"
+    },
+    {
+      "name": "PySide6_Addons",
+      "version": "6.11.3",
+      "filename": "pyside6_addons-6.11.3-cp310-abi3-macosx_13_0_universal2.whl",
+      "url": "https://files.pythonhosted.org/packages/0b/4c/5a1a8e0ad9171da89070a492b0217296203078475fb4c9ba2145f0e44b7f/pyside6_addons-6.11.3-cp310-abi3-macosx_13_0_universal2.whl",
+      "sha256": "a9af3d2719578f2bb8899098754183d5bee9c8d707b777aac98e10f2e9e55002"
+    },
+    {
+      "name": "PySide6_Essentials",
+      "version": "6.11.3",
+      "filename": "pyside6_essentials-6.11.3-cp310-abi3-macosx_13_0_universal2.whl",
+      "url": "https://files.pythonhosted.org/packages/c1/48/55362ced49bf8dafd4220c38cc0a0acb4b822cb60ea91e777007a3c1ec81/pyside6_essentials-6.11.3-cp310-abi3-macosx_13_0_universal2.whl",
+      "sha256": "e153290e03ef5bae4b29c584db0193e14d291a21c32030f6953fe98879b3202c"
+    },
+    {
+      "name": "shiboken6",
+      "version": "6.11.3",
+      "filename": "shiboken6-6.11.3-cp310-abi3-macosx_13_0_universal2.whl",
+      "url": "https://files.pythonhosted.org/packages/d0/3f/75730e62db2597eadc0076ab8c264912fec6d54cdf506b0326229404825c/shiboken6-6.11.3-cp310-abi3-macosx_13_0_universal2.whl",
+      "sha256": "9287279112201e18a7820d29ce9dc4ceca4148c681f4189aff6f4cea652d43af"
+    },
+    {
+      "name": "pyobjc-framework-Cocoa",
+      "version": "12.2.2",
+      "filename": "pyobjc_framework_cocoa-12.2.2-cp314-cp314-macosx_10_15_universal2.whl",
+      "url": "https://files.pythonhosted.org/packages/1f/1a/b99521999b9f54b89aad928ddff0faad507abfe33bc46599454bfa48a4b2/pyobjc_framework_cocoa-12.2.2-cp314-cp314-macosx_10_15_universal2.whl",
+      "sha256": "889d7bbd4ba2d4941078bfbbfb882138e51dbead27df006abfe0f2e0d49b5b2e"
+    },
+    {
+      "name": "pyobjc-core",
+      "version": "12.2.2",
+      "filename": "pyobjc_core-12.2.2-cp314-cp314-macosx_10_15_universal2.whl",
+      "url": "https://files.pythonhosted.org/packages/13/37/486d38a173b0b8dce973a3e13c74cf402ed1b8621586b5963bc9efd49a48/pyobjc_core-12.2.2-cp314-cp314-macosx_10_15_universal2.whl",
+      "sha256": "2062e8ad30a310441cd022544a897553408bebeaa7820d5edba3c96fd7fd693b"
+    }
   ]
 }

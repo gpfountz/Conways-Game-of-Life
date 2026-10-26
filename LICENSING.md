@@ -107,6 +107,27 @@ legal opinion or certification of a future distribution.
   `RUN_QT_LEGAL_TESTS=1 QT_QPA_PLATFORM=offscreen` in an environment that loads Qt.
 - No application bundle was built, installed, signed, deployed, or published.
 
+## Dependency validation October 26, 2026
+
+- The reviewed runtime now uses PySide6/Shiboken 6.11.3 and PyObjC 12.2.2.
+  Its embedded FFmpeg identifies 7.1.5. The notice index and `SOURCES.json`
+  describe these exact inspected wheels; all six downloaded wheel hashes
+  matched official PyPI release metadata. The binary inventory limitations
+  above still apply.
+- A clean Python 3.14.8 environment passed 35 ordinary tests and all three
+  opt-in Qt tests. Qt imported and created an offscreen application successfully.
+  Light/Dark legal-dialog screenshots were inspected; text selection, scrolling,
+  and missing-resource handling passed. This supersedes the earlier Qt loader
+  limitation for this environment and dependency set.
+- Ruff lint and strict mypy passed for source, tests, and scripts. Formatting
+  checks identify five existing source files with the same result under the
+  previous Ruff version; those files were left unchanged.
+- The six-package runtime audit with pip-audit 2.10.1 found no known
+  vulnerabilities. This advisory lookup does not inspect embedded native code.
+  Dependency resolution also succeeded for Python 3.10 on Intel/macOS 13,
+  including `tomli`; that target was not executed.
+- No application bundle was installed, signed, deployed, or published.
+
 Primary references: [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html),
 [SPDX GPL-3.0-only](https://spdx.org/licenses/GPL-3.0-only.html),
 [REUSE notices](https://reuse.software/tutorial/), and

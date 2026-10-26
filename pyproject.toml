@@ -20,8 +20,9 @@ license-files = [
   "src/gameoflife/legal_texts/third-party/*/*",
 ]
 dependencies = [
-  "PySide6>=6.8",
-  "pyobjc-framework-Cocoa>=10.0; sys_platform == 'darwin'",
+  # Qt 6.12 raises the macOS wheel minimum from 13 to 14 and splits packages.
+  "PySide6>=6.11.3,<6.12",
+  "pyobjc-framework-Cocoa>=12.2.2; sys_platform == 'darwin'",
 ]
 
 [project.scripts]
@@ -44,9 +45,9 @@ gameoflife = ["legal_texts/*", "legal_texts/third-party/*/*"]
 
 [project.optional-dependencies]
 dev = [
-  "pytest>=8.0",
-  "ruff>=0.12",
-  "mypy>=1.0"
+  "pytest>=9.1.1",
+  "ruff>=0.17.2",
+  "mypy>=2.4.0"
   ]
 
 [tool.pytest.ini_options]
