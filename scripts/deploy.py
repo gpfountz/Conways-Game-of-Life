@@ -79,7 +79,39 @@ def ensure_stopped(bundle: Path) -> None:
         raise ValueError("Quit Conway's Game of Life, then run deployment again.")
 
 
-def build_wheel(workspace: Path) -> Path:
+def project_python() -> Path:
+    """Reuse the checkout environment or create it with the selected interpreter."""
+    environment: Path = ROOT / ".venv"
+    python: Path = environment / "bin/python"
+    if environment.is_symlink():
+        raise ValueError("The project .venv must not be a symlink.")
+    if not environment.exists():
+        print(f"Creating project environment: {environment}", flush=True)
+        run(sys.executable, "-m", "venv", str(environment), cwd=ROOT)
+    if not (environment / "pyvenv.cfg").is_file() or not python.is_file():
+        raise ValueError(f"Project environment is incomplete: {python}")
+    return python
+
+
+def synchronize_dependencies(python: Path) -> None:
+    """Install declared requirements and validate dependencies and preserved notices."""
+    print("Installing project dependencies from requirements.txt...", flush=True)
+    run(
+        str(python),
+        "-m",
+        "pip",
+        "install",
+        "--requirement",
+        str(ROOT / "requirements.txt"),
+        cwd=ROOT,
+    )
+    print("Checking installed dependency consistency...", flush=True)
+    run(str(python), "-m", "pip", "check", cwd=ROOT)
+    print("Checking legal resources and preserved upstream hashes...", flush=True)
+    required_files()
+
+
+def build_wheel(workspace: Path, python: Path) -> Path:
     """Build from a clean source copy so stale build files cannot enter the wheel."""
     source: Path = workspace / "source"
     source.mkdir()
@@ -103,7 +135,7 @@ def build_wheel(workspace: Path) -> Path:
         )
     output: Path = workspace / "wheels"
     run(
-        sys.executable,
+        str(python),
         "-m",
         "pip",
         "wheel",
@@ -129,14 +161,23 @@ def verify_bundle(bundle: Path, version: str) -> None:
     run("/usr/bin/plutil", "-lint", str(bundle / "Contents/Info.plist"))
 
 
-def prepare_bundle(bundle: Path, wheel: Path, previous: Path) -> None:
+def prepare_bundle(bundle: Path, wheel: Path, previous: Path, python: Path) -> None:
     """Install a fresh runtime and refresh all launcher, icon, and bundle metadata."""
     resources: Path = bundle / "Contents/Resources"
     executable: Path = bundle / "Contents/MacOS/conways-game-of-life"
     executable.parent.mkdir(parents=True)
     environment: Path = resources / "venv"
-    run(sys.executable, "-m", "venv", str(environment))
-    run(str(environment / "bin/python"), "-I", "-m", "pip", "install", str(wheel))
+    run(str(python), "-m", "venv", str(environment))
+    run(
+        str(environment / "bin/python"),
+        "-I",
+        "-m",
+        "pip",
+        "install",
+        "--requirement",
+        str(ROOT / "requirements.txt"),
+        str(wheel),
+    )
     shutil.copy2(
         environment / "share/conways-game-of-life/ConwaysGameOfLife.icns",
         resources / "ConwaysGameOfLife.icns",
@@ -183,16 +224,26 @@ def deploy(bundle: Path, version: str) -> None:
             ) from error
         deployment_action(bundle)
         ensure_stopped(bundle)
-        required_files()
+        python: Path = project_python()
+        synchronize_dependencies(python)
         with tempfile.TemporaryDirectory(
             prefix=".conways-deploy-", dir=bundle.parent
         ) as directory:
             workspace: Path = Path(directory)
             staged: Path = workspace / bundle.name
-            wheel: Path = build_wheel(workspace)
-            prepare_bundle(staged, wheel, bundle)
+            print(
+                "Building application wheel and checking packaged legal resources...",
+                flush=True,
+            )
+            wheel: Path = build_wheel(workspace, python)
+            print("Preparing and verifying replacement application...", flush=True)
+            prepare_bundle(staged, wheel, bundle, python)
             verify_bundle(staged, version)
             ensure_stopped(bundle)
+            print(
+                "Installing verified application (with rollback on failure)...",
+                flush=True,
+            )
             replace_bundle(staged, bundle, version)
 
 
@@ -222,12 +273,17 @@ def main() -> int:
         )
         print(f"{action} Conway's Game of Life {version}: {bundle}", flush=True)
         if arguments.dry_run:
+            print(
+                "Would synchronize .venv from requirements.txt, check dependencies "
+                "and legal hashes, build, then verify and install the application.",
+                flush=True,
+            )
             return 0
         deploy(bundle, version)
         print(f"{action} complete: {bundle}", flush=True)
         if arguments.open:
             run("/usr/bin/open", str(bundle))
-    except (OSError, ValueError, subprocess.CalledProcessError) as error:
+    except (OSError, ValueError, KeyError, subprocess.CalledProcessError) as error:
         print(f"Deployment failed: {error}", file=sys.stderr)
         return 1
     return 0

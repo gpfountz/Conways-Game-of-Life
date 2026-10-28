@@ -63,7 +63,7 @@ run ruff python linter tests with:
 
 ## Deployment
 
-Run the same command for a first installation or an update:
+After `git pull`, run the same command for a first installation or an update:
 
 ```zsh
 ./scripts/deploy.sh
@@ -74,8 +74,20 @@ whether that bundle already exists and reports **Install** or **Update**.
 Each run builds the current checkout, even when its application version has not
 changed. Quit the installed application before updating it.
 
-Deployment builds a wheel from a clean temporary source copy, checks its legal
-resources, and installs it and its dependencies into a fresh bundle environment.
+Before building, deployment reuses the checkout's `.venv` (or creates it if
+missing) and runs its Python's `pip install --requirement requirements.txt`.
+This installs missing dependencies and adjusts versions to satisfy the checked-in
+requirements, including the Qt upper bound. It does not request blanket upgrades,
+change requirements, or generate a lockfile; already satisfied requirements stay
+installed. The repository currently uses version ranges rather than a lockfile.
+It then runs `pip check` and the existing legal-resource verification, including
+the canonical GPL copy and preserved upstream notice hashes in `SOURCES.json`.
+Installation or validation failures stop before the build and leave the installed
+application untouched. The checkout's `.venv` may have been updated; fix the
+reported error and rerun the same command.
+
+Deployment then builds a wheel from a clean temporary source copy, checks its legal
+resources, and installs it and the same requirements into a fresh bundle environment.
 It refreshes the launcher, icon, and version metadata, then checks imports and
 installed dependencies. An update keeps the old bundle until the replacement
 passes verification; if verification fails after replacement, it restores the
@@ -94,9 +106,14 @@ Launch the application after a successful deployment, or choose another location
 ./scripts/deploy.sh --app-path "/path/to/Conways Game of Life.app"
 ```
 
-Use Python 3.10–3.14 on macOS 13 or later. The script uses `.venv/bin/python`
-when available, otherwise `python3`; select another interpreter with
-`DEPLOY_PYTHON=/path/to/python3 ./scripts/deploy.sh`. Internet access is needed for
+Use Python 3.10–3.14 on macOS 13 or later. The shell wrapper starts with
+`.venv/bin/python` when available, otherwise `python3`; select the bootstrap
+interpreter with `DEPLOY_PYTHON=/path/to/python3 ./scripts/deploy.sh`.
+Dependency installation and building always use the checkout's `.venv/bin/python`;
+an existing `.venv` is reused even when `DEPLOY_PYTHON` is set. An incomplete or
+symlinked `.venv` is rejected. Dry-run only reports the planned stages and does
+not create or modify the environment, install dependencies, build, or launch.
+Internet access is needed for
 build tools and dependencies unless they are already available through pip.
 The installed bundle depends on that external Python installation remaining
 available. This is a local installation workflow; see [LICENSING.md](LICENSING.md)
