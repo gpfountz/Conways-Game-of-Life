@@ -128,6 +128,80 @@ legal opinion or certification of a future distribution.
   including `tomli`; that target was not executed.
 - No application bundle was installed, signed, deployed, or published.
 
+## Dependency review October 31, 2026
+
+Official PyPI release metadata and upstream release notes were queried during
+this review. Development minimums changed as follows:
+
+| Tool | Previous minimum | Reviewed minimum | Relevant upstream changes |
+| --- | --- | --- | --- |
+| pytest | 9.1.1 | 9.2.0 | Clearer configuration/plugin errors and test reporting; reviewed keyword-only parametrization changes do not require project changes. [Changelog](https://docs.pytest.org/en/stable/changelog.html#pytest-9-2-0-2026-10-27). |
+| Ruff | 0.17.2 | 0.17.3 | Fixes an incorrect f-string conversion and improves formatter/lexer performance. [Release notes](https://github.com/astral-sh/ruff/releases/tag/0.17.3). |
+| mypy | 2.4.0 | 2.4.1 | Fixes two-phase overload checking and mypyc nested-function setup. [Versioned changelog](https://github.com/python/mypy/blob/v2.4.1/CHANGELOG.md#mypy-241). |
+
+All three tools retain MIT metadata, compatible Python requirements, and
+byte-identical license documents compared with their prior macOS wheels,
+including mypy's typeshed notices. They remain development dependencies and do
+not change the runtime notice inventory. SHA-256 hashes for all 48 downloaded
+runtime, development, and temporary validation-tool wheels matched exact official
+PyPI release metadata. Preserved upstream legal files and their recorded hashes
+were left unchanged.
+
+Runtime decisions and deferrals:
+
+- Retain PySide6/Essentials/Addons/Shiboken 6.11.3, the newest stable 6.11
+  release. [PySide6 6.12.0](https://pypi.org/project/PySide6/6.12.0/) requires
+  macOS 14 wheels and adds separate WebEngine/PDF distributions. Adopting it
+  needs a platform-support decision, full closure/native-notice review, and GUI
+  validation before removing `<6.12`.
+- Update PyObjC Core/Cocoa from 12.2.2 to [13.0](https://pyobjc.readthedocs.io/en/latest/changelog.html#version-13-0),
+  the latest stable PyPI release. Raise the project's minimum Python to 3.11
+  in package metadata, deployment validation, and documentation. The reviewed
+  deployment range is 3.11–3.14; macOS 13 support is unchanged. No PyObjC upper
+  bound is imposed. The application's real Foundation bundle metadata calls
+  work with the changed selector implementation. Both universal2 wheel hashes,
+  declared MIT terms, native architectures, and system-library links were
+  inspected; provenance now records 13.0. The upstream Core and Cocoa wheel
+  license bytes match the preserved copy. Changelog 13.0.1 is not yet a stable
+  PyPI release at this review point.
+- Installed development transitive packages and pip 26.2.2 are current. The
+  setuptools `>=77.0.3` build requirement is a compatibility floor, not a pin;
+  isolated builds select current setuptools 84.2.1. There is no production lock,
+  npm manifest, CI workflow/action pin, or container image in this repository.
+  Python remains externally supplied.
+
+Validation on Apple Silicon/macOS with Python 3.14.8:
+
+- `.venv/bin/python -m pytest -q`: 64 passed, three opt-in Qt cases skipped,
+  including deployment support checks rejecting Python 3.10 and accepting 3.11.
+- `.venv/bin/ruff check src tests scripts` and
+  `.venv/bin/mypy --strict src tests scripts`: passed (17 typed files).
+- `.venv/bin/ruff format --check src tests scripts`: flags five existing source
+  files; the complete output is identical under 0.17.2 and 0.17.3. No unrelated
+  formatting changes were made.
+- `pip check`, `scripts/check_legal_resources.py`, and
+  `zsh -n scripts/deploy.sh scripts/redeploy.sh`: passed.
+- A fresh environment installed the full runtime/development closure from the
+  verified wheels and passed `pip check`. With `RUN_QT_LEGAL_TESTS=1` and
+  `QT_QPA_PLATFORM=offscreen`, the life, legal, and legal-GUI suites passed all
+  14 cases, including Light/Dark text selection, scrolling, and missing notices.
+- A clean, wheel-only resolution for Intel/macOS 13 and Python 3.11 succeeded.
+  Target markers were checked across every resolved requirement; this target
+  was not executed. Python 3.10 is no longer supported.
+- `pip-audit` 2.10.1 against `requirements.txt` resolved and audited all six
+  runtime distributions with no known vulnerabilities. A separate audit of all
+  19 installed runtime/development distributions, including pip, also found no
+  known vulnerabilities. These point-in-time advisory lookups do not inspect
+  embedded native code.
+- Isolated wheel/source-archive builds passed the legal-resource artifact
+  checker. The wheel installed into the fresh environment and loaded the app,
+  Qt 6.11.3, Foundation bridge, and complete offline legal texts outside the
+  checkout using isolated Python imports.
+
+Validation used application version 1.0.16 before commit-time version allocation.
+No app was deployed or published. Existing binary-release limitations above
+remain open.
+
 Primary references: [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html),
 [SPDX GPL-3.0-only](https://spdx.org/licenses/GPL-3.0-only.html),
 [REUSE notices](https://reuse.software/tutorial/), and

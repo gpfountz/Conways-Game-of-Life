@@ -5,6 +5,7 @@
 
 from __future__ import annotations
 
+import platform
 import plistlib
 import subprocess
 import sys
@@ -23,6 +24,24 @@ def existing_bundle(path: Path, identifier: str = deploy.BUNDLE_ID) -> None:
         plistlib.dumps({"CFBundleIdentifier": identifier})
     )
     (path / "old.txt").write_text("previous installation")
+
+
+@pytest.mark.parametrize(
+    ("version", "supported"),
+    [((3, 10), False), ((3, 11), True), ((3, 14), True), ((3, 15), False)],
+)
+def test_deployment_python_support(
+    monkeypatch: pytest.MonkeyPatch, version: tuple[int, int], supported: bool
+) -> None:
+    """Reject unsupported interpreters before deployment can change an installation."""
+    monkeypatch.setattr(sys, "platform", "darwin")
+    monkeypatch.setattr(sys, "version_info", version)
+    monkeypatch.setattr(platform, "mac_ver", lambda: ("13.0", ("", "", ""), ""))
+    if supported:
+        deploy.validate_host()
+    else:
+        with pytest.raises(ValueError, match="Python 3.11–3.14"):
+            deploy.validate_host()
 
 
 def test_detect_install_and_update(tmp_path: Path) -> None:

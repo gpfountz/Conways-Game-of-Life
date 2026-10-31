@@ -8,13 +8,13 @@ Other components retain their own copyright notices and license terms.
 The complete upstream texts listed below are included locally in this package.
 They have not been rewritten or replaced with the project's copyright.
 
-## Runtime components reviewed on October 26, 2026
+## Runtime components reviewed on October 31, 2026
 
 | Component | Observed version | Terms / attribution |
 | --- | --- | --- |
 | PySide6, PySide6 Essentials, PySide6 Addons, Shiboken6 | 6.11.3 | The Qt Company and contributors; package metadata offers LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only. Open-source GPLv3 use is compatible with this project's chosen license; included modules and their dependencies retain separate terms. |
 | Qt native frameworks | QtCore reports 6.11.3 | The Qt Company and contributors; module-specific GPL/LGPL terms and third-party licenses apply. The Python package's license field is not an exhaustive license inventory of its native payload. |
-| PyObjC Core and Cocoa | 12.2.2 | MIT; complete original copyright, permission, and warranty notice in `third-party/PyObjC/LICENSE.txt`. The two reviewed distributions' upstream license documents are byte-identical. |
+| PyObjC Core and Cocoa | 13.0 | MIT; complete original copyright, permission, and warranty notice in `third-party/PyObjC/LICENSE.txt`. The Core upstream license and Cocoa wheel license are byte-identical to the preserved copy. |
 | FFmpeg in PySide6 Addons | Embedded build prefix identifies n7.1.5 | Observed libavcodec declares LGPL version 2.1 or later for both arm64 and x86_64. Its upstream `COPYING.LGPLv2.1` and `LICENSE.md` are included. |
 | CPython used for review | 3.14.8 | Python Software Foundation and historical contributors; complete upstream license in `third-party/Python/LICENSE`. A release must record the interpreter it actually supplies or requires. |
 
@@ -42,7 +42,7 @@ FFmpeg, and Python documents above. Their inclusion does not claim that every
 alternative is selected for this program or that documentation licenses apply
 to the program's original source.
 
-The Qt 6.11.3 and PyObjC 12.2.2 notice texts match their previous snapshots
+The Qt 6.11.3 and PyObjC 13.0 notice texts match their previous snapshots
 byte for byte. FFmpeg 7.1.5's `LICENSE.md` is unchanged; its upstream
 `COPYING.LGPLv2.1` removes nine form-feed characters without changing the words.
 The included copy preserves the exact new upstream bytes.
@@ -91,13 +91,29 @@ retain the 6.11 family with `<6.12`; that family supports Python 3.10–3.14.
 Review platform support, the new closure, notices, and GUI behavior before
 removing that bound. Python itself is supplied externally, not updated here.
 
+## PyObjC refresh on October 31, 2026
+
+Core and Cocoa were updated together from 12.2.2 to 13.0. The application now
+requires Python 3.11–3.14; macOS 13 remains supported. The 13.0 changes to bound
+selectors and keyword arguments were reviewed against the application's bundle
+metadata calls. The real Foundation calls and Qt integration were exercised
+locally; Intel/Python 3.11 wheel resolution was checked without executing it.
+
+Both downloaded CPython 3.14 universal2 wheel hashes match official PyPI release
+metadata. `SOURCES.json` records their metadata and updated representative native
+evidence. The inspected bridge contains arm64 and x86_64 slices and links to
+macOS-supplied Foundation, CoreFoundation, libffi, libSystem, and libobjc. The
+upstream Core license and Cocoa wheel license match the preserved MIT text
+byte for byte, so the license file and its hash did not change. This focused
+review does not close the binary-release inventory tasks above.
+
 Upstream references:
 - https://doc.qt.io/qtforpython-6/release_notes/pyside6_release_notes.html
-- https://pyobjc.readthedocs.io/en/latest/changelog.html#version-12-2-2
+- https://pyobjc.readthedocs.io/en/latest/changelog.html#version-13-0
 - https://github.com/FFmpeg/FFmpeg/blob/n7.1.5/Changelog
 - https://code.qt.io/cgit/pyside/pyside-setup.git/tag/?h=v6.11.3
 - https://doc.qt.io/qtforpython-6/licenses.html
 - https://doc.qt.io/qt-6.11/licenses-used-in-qt.html
-- https://github.com/ronaldoussoren/pyobjc/tree/v12.2.2
+- https://github.com/ronaldoussoren/pyobjc/tree/v13.0
 - https://github.com/FFmpeg/FFmpeg/tree/n7.1.5
 - https://github.com/python/cpython/tree/v3.14.8

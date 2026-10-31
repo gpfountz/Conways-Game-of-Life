@@ -10,7 +10,7 @@ name = "conways-game-of-life"
 dynamic = ["version"]
 description = "A native-feeling macOS implementation of Conway's Game of Life"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 authors = [{name = "Greg Pfountz"}]
 license = "GPL-3.0-only"
 license-files = [
@@ -22,7 +22,8 @@ license-files = [
 dependencies = [
   # Qt 6.12 raises the macOS wheel minimum from 13 to 14 and splits packages.
   "PySide6>=6.11.3,<6.12",
-  "pyobjc-framework-Cocoa>=12.2.2; sys_platform == 'darwin'",
+  "pyobjc-core>=13.0; sys_platform == 'darwin'",
+  "pyobjc-framework-Cocoa>=13.0; sys_platform == 'darwin'",
 ]
 
 [project.scripts]
@@ -45,9 +46,9 @@ gameoflife = ["legal_texts/*", "legal_texts/third-party/*/*"]
 
 [project.optional-dependencies]
 dev = [
-  "pytest>=9.1.1",
-  "ruff>=0.17.2",
-  "mypy>=2.4.0"
+  "pytest>=9.2.0",
+  "ruff>=0.17.3",
+  "mypy>=2.4.1"
   ]
 
 [tool.pytest.ini_options]

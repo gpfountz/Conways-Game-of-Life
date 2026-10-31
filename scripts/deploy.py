@@ -51,8 +51,8 @@ def validate_host() -> None:
     """Require the Python and macOS versions supported by this checkout."""
     if sys.platform != "darwin":
         raise ValueError("Deployment requires macOS.")
-    if not (3, 10) <= sys.version_info[:2] < (3, 15):
-        raise ValueError("Select Python 3.10–3.14 with DEPLOY_PYTHON.")
+    if not (3, 11) <= sys.version_info[:2] < (3, 15):
+        raise ValueError("Select Python 3.11–3.14 with DEPLOY_PYTHON.")
     if int(platform.mac_ver()[0].split(".")[0]) < 13:
         raise ValueError("Deployment requires macOS 13 or later.")
 

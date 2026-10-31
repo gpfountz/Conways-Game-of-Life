@@ -19,9 +19,10 @@ dependency terms. The app's **About Conway's Game of Life** dialog provides offl
 
 ## Development Run
 
-The reviewed Qt 6.11 dependencies require Python 3.10–3.14 and macOS 13 or later.
+The reviewed dependencies require Python 3.11–3.14 and macOS 13 or later.
 Qt is constrained below 6.12 to retain macOS 13 wheels; its package layout and
 platform requirements need a separate review before that bound is removed.
+PyObjC Core and Cocoa use version 13 or later, which requires Python 3.11 or later.
 From the project checkout, create a local
 virtual environment and install the dependencies:
 
@@ -106,7 +107,7 @@ Launch the application after a successful deployment, or choose another location
 ./scripts/deploy.sh --app-path "/path/to/Conways Game of Life.app"
 ```
 
-Use Python 3.10–3.14 on macOS 13 or later. The shell wrapper starts with
+Use Python 3.11–3.14 on macOS 13 or later. The shell wrapper starts with
 `.venv/bin/python` when available, otherwise `python3`; select the bootstrap
 interpreter with `DEPLOY_PYTHON=/path/to/python3 ./scripts/deploy.sh`.
 Dependency installation and building always use the checkout's `.venv/bin/python`;

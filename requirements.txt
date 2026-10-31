@@ -3,4 +3,5 @@
 # See LICENSE for license terms and the warranty disclaimer.
 # Keep the Qt family on macOS 13-compatible wheels; see pyproject.toml.
 PySide6>=6.11.3,<6.12
-pyobjc-framework-Cocoa>=12.2.2; sys_platform == "darwin"
+pyobjc-core>=13.0; sys_platform == "darwin"
+pyobjc-framework-Cocoa>=13.0; sys_platform == "darwin"
