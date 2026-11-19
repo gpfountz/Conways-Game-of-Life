@@ -202,6 +202,46 @@ Validation used application version 1.0.16 before commit-time version allocation
 No app was deployed or published. Existing binary-release limitations above
 remain open.
 
+## Dependency review November 19, 2026
+
+Official PyPI release metadata and upstream release notes were queried during
+this review. Only one declared minimum changed:
+
+| Tool | Previous minimum | Reviewed minimum | Relevant upstream changes |
+| --- | --- | --- | --- |
+| Ruff | 0.17.3 | 0.17.6 | Parser fixes for semicolon statements, a BOM renderer panic fix, several autofix corrections, `F823`/`PLR1733` accuracy fixes, and performance work; new rules are preview-only. Releases [0.17.4](https://github.com/astral-sh/ruff/releases/tag/0.17.4), [0.17.5](https://github.com/astral-sh/ruff/releases/tag/0.17.5), [0.17.6](https://github.com/astral-sh/ruff/releases/tag/0.17.6). |
+
+The Ruff 0.17.3 and 0.17.6 macOS arm64 wheel hashes matched official PyPI
+release metadata. Both declare MIT and `Requires-Python >=3.7`; their
+`dist-info/licenses` contents are byte-identical. Ruff remains a development
+tool and does not change the runtime notice inventory.
+
+Runtime decisions and deferrals:
+
+- PySide6/Essentials/Addons/Shiboken 6.11.3 remain the newest stable 6.11
+  release. The 6.12 deferral from October 31 is unchanged (6.12.0 is still the
+  latest 6.12 release).
+- PyObjC Core/Cocoa 13.0, pytest 9.2.0, and mypy 2.4.1 are the latest stable
+  releases. pip 26.3 is the current installer but is not a declared dependency.
+  The setuptools `>=77.0.3` floor still admits current 84.2.1.
+
+Validation on Apple Silicon/macOS with a fresh Python 3.14 environment:
+
+- A clean install of `.[dev]` resolved the full closure; `pip check` passed.
+- `pytest -q`: 64 passed, three opt-in Qt cases skipped. With
+  `RUN_QT_LEGAL_TESTS=1` and `QT_QPA_PLATFORM=offscreen`, the life, legal, and
+  legal-GUI suites passed all 14 cases.
+- `ruff check` and `mypy --strict` passed for `src tests scripts` (17 files).
+  `ruff format --check` flags the same five existing files; its complete output
+  is identical under 0.17.3 and 0.17.6.
+- `scripts/check_legal_resources.py` and `zsh -n` on the deployment scripts passed.
+- `pip-audit` 2.10.1 found no known vulnerabilities in the six runtime
+  distributions from `requirements.txt` or in the installed environment
+  (the editable project itself skipped). These are point-in-time advisory
+  lookups and do not inspect embedded native code.
+
+No app was built, deployed, or published.
+
 Primary references: [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html),
 [SPDX GPL-3.0-only](https://spdx.org/licenses/GPL-3.0-only.html),
 [REUSE notices](https://reuse.software/tutorial/), and
